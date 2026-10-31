@@ -1,0 +1,2729 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K H A N // ARCHITECT — Luxury Gaming & Creative Engineering</title>
+  
+  <!-- Dynamic Animated Favicon Holder -->
+  <link id="dynamicFavicon" rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23050608'/><circle cx='16' cy='16' r='8' fill='%2300f3ff'/></svg>">
+
+  <!-- Google Fonts: Syne & Space Grotesk & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    /* Dynamic Theme CSS Variables */
+    :root {
+      --bg-base: #030407;
+      --bg-panel: rgba(8, 10, 16, 0.72);
+      --bg-panel-neon: rgba(11, 14, 24, 0.82);
+      --bg-panel-mobile: rgba(6, 8, 15, 0.98);
+      --border-panel: rgba(255, 255, 255, 0.1);
+      --text-main: #e2e8f0;
+      --text-muted: #94a3b8;
+      --text-heading: #ffffff;
+      
+      /* Active Realm Palette (Default: City / Cyberpunk Neon) */
+      --c-primary: #00f0ff;
+      --c-secondary: #ff007f;
+      --c-accent: #f59e0b;
+      --glow-primary: rgba(0, 240, 255, 0.5);
+      --glow-secondary: rgba(255, 0, 127, 0.5);
+    }
+
+    /* Luxury Light Mode Overrides */
+    html.light-theme {
+      --bg-base: #f5f7fc;
+      --bg-panel: rgba(255, 255, 255, 0.88);
+      --bg-panel-neon: rgba(255, 255, 255, 0.95);
+      --bg-panel-mobile: rgba(248, 250, 252, 0.98);
+      --border-panel: rgba(15, 23, 42, 0.12);
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --text-heading: #090d16;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    /* Dynamic variable classes */
+    .theme-text-heading { color: var(--text-heading) !important; }
+    .theme-text-muted { color: var(--text-muted) !important; }
+    .theme-primary-color { color: var(--c-primary) !important; }
+    .theme-secondary-color { color: var(--c-secondary) !important; }
+    .theme-accent-color { color: var(--c-accent) !important; }
+    .theme-primary-bg { background-color: var(--c-primary) !important; }
+    .theme-primary-border { border-color: var(--c-primary) !important; }
+
+    /* Hide Scrollbar completely while preserving smooth scrolling */
+    html, body {
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE and Edge */
+    }
+    ::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+      width: 0px;
+      background: transparent;
+    }
+    
+    /* Global Selection */
+    ::selection {
+      background: var(--c-primary);
+      color: #050608;
+    }
+
+    /* Scanline Screen FX */
+    .scanlines {
+      background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0),
+        rgba(255,255,255,0) 50%,
+        rgba(0, 0, 0, 0.32) 50%,
+        rgba(0, 0, 0, 0.32)
+      );
+      background-size: 100% 4px;
+      pointer-events: none;
+    }
+    html.light-theme .scanlines {
+      opacity: 0.22;
+    }
+
+    /* Subtle CRT Flicker */
+    @keyframes crtFlicker {
+      0% { opacity: 0.99; }
+      50% { opacity: 1; }
+      52% { opacity: 0.97; }
+      54% { opacity: 1; }
+      100% { opacity: 0.99; }
+    }
+    .flicker-overlay {
+      animation: crtFlicker 0.15s infinite;
+      pointer-events: none;
+    }
+
+    /* Grid Texture */
+    .tech-grid {
+      background-image: 
+        radial-gradient(circle at 1px 1px, var(--c-primary) 1px, transparent 0);
+      background-size: 32px 32px;
+      opacity: 0.15;
+    }
+
+    /* Glass Morphism Base */
+    .glass-panel {
+      background: var(--bg-panel);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-panel);
+    }
+
+    .glass-panel-neon {
+      background: var(--bg-panel-neon);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-panel);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), inset 0 0 15px rgba(255, 255, 255, 0.04);
+    }
+
+    /* Cursor Trail Customization */
+    .custom-cursor {
+      pointer-events: none;
+      transition: transform 0.12s ease-out, width 0.2s ease, height 0.2s ease, background-color 0.2s ease;
+      z-index: 99999;
+      border-color: var(--c-primary);
+    }
+    .cursor-dot {
+      pointer-events: none;
+      z-index: 100000;
+      background-color: var(--c-primary);
+      box-shadow: 0 0 14px var(--c-primary);
+    }
+
+    /* 3D Transform Utilities */
+    .preserve-3d {
+      transform-style: preserve-3d;
+    }
+    .perspective-1000 {
+      perspective: 1000px;
+    }
+
+    /* Section scroll offset helper to account for sticky header */
+    section {
+      scroll-margin-top: 5.5rem;
+    }
+
+    /* Button Cyber Cut Corner */
+    .cyber-clip {
+      clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+    }
+    .cyber-clip-sm {
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+    }
+
+    /* Marquee Animation for Footer Ticker */
+    @keyframes marqueeScroll {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee-scroll {
+      display: flex;
+      width: max-content;
+      animation: marqueeScroll 22s linear infinite;
+    }
+    .animate-marquee-scroll:hover {
+      animation-play-state: paused;
+    }
+
+    /* Fast Infinite Logo Cyber Spin Animation */
+    @keyframes fastLogoSpin {
+      0% {
+        transform: rotate(0deg) scale(1);
+        box-shadow: 0 0 10px var(--c-primary), 0 0 20px var(--c-secondary);
+      }
+      50% {
+        transform: rotate(180deg) scale(1.1);
+        box-shadow: 0 0 25px var(--c-secondary), 0 0 35px var(--c-primary);
+      }
+      100% {
+        transform: rotate(360deg) scale(1);
+        box-shadow: 0 0 10px var(--c-primary), 0 0 20px var(--c-secondary);
+      }
+    }
+    .cyber-logo-spin {
+      animation: fastLogoSpin 1.8s linear infinite;
+    }
+
+    /* Mobile Enhancements & Pulse Gradients */
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+    }
+    .holo-glow {
+      animation: pulseGlow 4s ease-in-out infinite;
+    }
+
+    @keyframes scanTarget {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(350%); }
+    }
+    .scan-beam {
+      animation: scanTarget 3s linear infinite;
+    }
+
+    /* Hide standard cursor on non-touch devices */
+    @media (hover: hover) and (pointer: fine) {
+      body {
+        cursor: none;
+      }
+      a, button, input, textarea, select {
+        cursor: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .glass-panel-mobile {
+        background: var(--bg-panel-mobile);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+      }
+    }
+  </style>
+</head>
+<body class="relative overflow-x-hidden">
+
+  <!-- Scanline & Ambient Overlays -->
+  <div class="fixed inset-0 scanlines z-40"></div>
+  <div class="fixed inset-0 tech-grid z-0 pointer-events-none"></div>
+
+  <!-- Custom Cursor Glow & Ring -->
+  <div id="cursorRing" class="custom-cursor fixed top-0 left-0 w-10 h-10 rounded-full border -translate-x-1/2 -translate-y-1/2 hidden md:block"></div>
+  <div id="cursorDot" class="cursor-dot fixed top-0 left-0 w-2 h-2 rounded-full -translate-x-1/2 -translate-y-1/2 hidden md:block"></div>
+
+  <!-- Ambient Audio Warning / Indicator Toast -->
+  <div id="audioToast" class="fixed bottom-6 right-6 z-50 glass-panel border px-4 py-2 rounded-xl text-xs font-mono theme-accent-color hidden items-center gap-2 shadow-2xl transition-all duration-300">
+    <i class="fa-solid fa-volume-high animate-pulse"></i>
+    <span>AUDIO SYNTHESIZER: ARMED</span>
+  </div>
+
+  <!-- 3D Three.js Hero Viewport (Non-blocking pointers for full interaction) -->
+  <div id="canvas-container" class="fixed inset-0 z-0 pointer-events-none">
+    <canvas id="hero-canvas" class="w-full h-full pointer-events-none"></canvas>
+  </div>
+
+  <!-- STICKY LUXURY NAVIGATION -->
+  <header class="fixed top-0 left-0 w-full z-50 px-3 sm:px-8 py-3 sm:py-4 transition-all duration-300" id="mainHeader">
+    <div class="max-w-7xl mx-auto flex items-center justify-between glass-panel px-4 sm:px-6 py-2.5 sm:py-3 rounded-2xl border-white/10 shadow-2xl">
+      
+      <!-- Brand Crest with Fast Infinite Animation -->
+      <a href="#hero" class="interactive-elem flex items-center gap-2.5 sm:gap-3 group">
+        <div class="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-cyan-500/30 via-pink-500/30 to-yellow-500/30 border border-white/30 flex items-center justify-center overflow-hidden shadow-lg cyber-logo-spin">
+          <span class="font-display font-black text-lg sm:text-xl tracking-tighter inline-block animate-pulse" style="color: var(--c-primary)">W</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-display font-extrabold text-xs sm:text-base tracking-widest uppercase theme-text-heading flex items-center gap-2">
+            Wali Khan
+            <span class="w-1.5 h-1.5 rounded-full animate-ping" style="background-color: var(--c-primary)"></span>
+          </span>
+          <span class="font-mono text-[9px] sm:text-[10px] theme-text-muted tracking-wider">LEVEL 89 ARCHITECT</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navlinks -->
+      <nav class="hidden lg:flex items-center gap-7 font-mono text-xs uppercase tracking-wider theme-text-muted">
+        <a href="#hero" class="interactive-elem hover:text-white transition-colors flex items-center gap-1.5">
+          <span style="color: var(--c-primary)">01.</span> Nexus
+        </a>
+        <a href="#gallery" class="interactive-elem hover:text-white transition-colors flex items-center gap-1.5">
+          <span style="color: var(--c-primary)">02.</span> Projects
+        </a>
+        <a href="#arsenal" class="interactive-elem hover:text-white transition-colors flex items-center gap-1.5">
+          <span style="color: var(--c-primary)">03.</span> Arsenal
+        </a>
+        <a href="#tutorial" class="interactive-elem hover:text-white transition-colors flex items-center gap-1.5">
+          <span style="color: var(--c-primary)">04.</span> Tutorial
+        </a>
+        <a href="#stats" class="interactive-elem hover:text-white transition-colors flex items-center gap-1.5">
+          <span style="color: var(--c-primary)">05.</span> Metrics
+        </a>
+        <a href="#terminal" class="interactive-elem hover:text-white transition-colors flex items-center gap-1.5">
+          <span style="color: var(--c-primary)">06.</span> Comms
+        </a>
+      </nav>
+
+      <!-- Luxury Theme & Color Switchers + Audio Toggle -->
+      <div class="flex items-center gap-2 sm:gap-3">
+
+        <!-- 1. LUXURY LIGHT / DARK MODE TOGGLE BUTTON -->
+        <button id="themeModeBtn" title="Toggle Light/Dark Mode" class="interactive-elem relative p-2 sm:p-2.5 rounded-xl border border-white/10 glass-panel hover:border-white/30 transition-all text-xs flex items-center gap-1.5 active:scale-95 shadow-sm">
+          <i id="themeModeIcon" class="fa-solid fa-moon theme-accent-color"></i>
+          <span id="themeModeLabel" class="font-mono text-[10px] hidden md:inline uppercase font-semibold">DARK</span>
+        </button>
+
+        <!-- 2. LUXURY COLOR REALM SWITCHER BUTTON & DROPDOWN -->
+        <div class="relative">
+          <button id="colorPaletteBtn" title="Switch Atmospheric Color Realm" class="interactive-elem relative p-2 sm:p-2.5 rounded-xl border border-white/10 glass-panel hover:border-white/30 transition-all text-xs flex items-center gap-1.5 active:scale-95 shadow-sm">
+            <span id="activePaletteDot" class="w-2.5 h-2.5 rounded-full animate-pulse" style="background-color: var(--c-primary)"></span>
+            <i class="fa-solid fa-palette theme-primary-color"></i>
+            <span id="activePaletteLabel" class="font-mono text-[10px] hidden sm:inline uppercase font-semibold">CITY</span>
+            <i class="fa-solid fa-chevron-down text-[8px] opacity-60"></i>
+          </button>
+
+          <!-- Dropdown Realm Menu (Nature, Sky, City, Village, Desert) -->
+          <div id="paletteDropdown" class="absolute right-0 top-full mt-2 w-48 glass-panel-neon rounded-2xl p-2.5 hidden flex-col gap-1.5 z-50 border shadow-2xl transition-all">
+            <div class="px-2 py-1 font-mono text-[9px] theme-text-muted tracking-widest border-b border-white/10 mb-1 uppercase flex items-center justify-between">
+              <span>ATMOSPHERIC REALMS</span>
+              <i class="fa-solid fa-wand-magic-sparkles text-[9px]"></i>
+            </div>
+            
+            <button onclick="setAtmosphere('city')" class="palette-option w-full text-left px-2.5 py-1.5 rounded-xl text-xs font-mono flex items-center justify-between hover:bg-white/10 transition-all" data-realm="city">
+              <span class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#00f3ff]"></span>
+                <span class="theme-text-heading font-medium">City</span>
+              </span>
+              <span class="text-[9px] text-[#ff0055]">Cyber</span>
+            </button>
+
+            <!-- Gaming Theme Option -->
+            <button onclick="setAtmosphere('gaming')" class="palette-option w-full text-left px-2.5 py-1.5 rounded-xl text-xs font-mono flex items-center justify-between hover:bg-white/10 transition-all" data-realm="gaming">
+              <span class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#9d00ff]"></span>
+                <span class="theme-text-heading font-medium">Gaming</span>
+              </span>
+              <span class="text-[9px] text-[#00f3ff]">Hyperdrive</span>
+            </button>
+
+            <button onclick="setAtmosphere('nature')" class="palette-option w-full text-left px-2.5 py-1.5 rounded-xl text-xs font-mono flex items-center justify-between hover:bg-white/10 transition-all" data-realm="nature">
+              <span class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#10b981]"></span>
+                <span class="theme-text-heading font-medium">Nature</span>
+              </span>
+              <span class="text-[9px] text-[#059669]">Emerald</span>
+            </button>
+
+            <button onclick="setAtmosphere('sky')" class="palette-option w-full text-left px-2.5 py-1.5 rounded-xl text-xs font-mono flex items-center justify-between hover:bg-white/10 transition-all" data-realm="sky">
+              <span class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#38bdf8]"></span>
+                <span class="theme-text-heading font-medium">Sky</span>
+              </span>
+              <span class="text-[9px] text-[#818cf8]">Celestial</span>
+            </button>
+
+            <button onclick="setAtmosphere('village')" class="palette-option w-full text-left px-2.5 py-1.5 rounded-xl text-xs font-mono flex items-center justify-between hover:bg-white/10 transition-all" data-realm="village">
+              <span class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#84cc16]"></span>
+                <span class="theme-text-heading font-medium">Village</span>
+              </span>
+              <span class="text-[9px] text-[#eab308]">Rustic</span>
+            </button>
+
+            <button onclick="setAtmosphere('desert')" class="palette-option w-full text-left px-2.5 py-1.5 rounded-xl text-xs font-mono flex items-center justify-between hover:bg-white/10 transition-all" data-realm="desert">
+              <span class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#f97316]"></span>
+                <span class="theme-text-heading font-medium">Desert</span>
+              </span>
+              <span class="text-[9px] text-[#eab308]">Solar Dune</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sound Synthesis Toggle -->
+        <button id="soundToggle" class="interactive-elem relative p-2 sm:p-2.5 rounded-xl border border-white/10 hover:border-white/30 glass-panel theme-text-muted transition-all text-xs flex items-center gap-1.5 active:scale-95 shadow-sm">
+          <i id="soundIcon" class="fa-solid fa-volume-xmark"></i>
+          <span class="font-mono text-[10px] hidden sm:inline">SFX: OFF</span>
+        </button>
+
+        <!-- Quick Terminal Action -->
+        <a href="#terminal" class="interactive-elem hidden xl:flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-bold tracking-wider text-black shadow-md transition-all hover:scale-105 cyber-clip-sm" style="background: linear-gradient(135deg, var(--c-primary), var(--c-secondary))">
+          <span>CONNECT</span>
+          <i class="fa-solid fa-bolt text-[10px]"></i>
+        </a>
+
+        <!-- Mobile Menu Trigger -->
+        <button id="mobileMenuBtn" aria-label="Toggle navigation menu" class="lg:hidden interactive-elem theme-text-heading p-2 sm:p-2.5 rounded-xl glass-panel border border-white/10 focus:outline-none active:scale-90 transition-all">
+          <i id="menuHamburgerIcon" class="fa-solid fa-bars-staggered text-base"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobileMenu" class="lg:hidden max-w-7xl mx-auto mt-3 glass-panel-mobile rounded-2xl p-5 hidden flex-col gap-3 font-mono text-sm border shadow-2xl transition-all duration-300">
+      <div class="flex items-center justify-between pb-3 border-b border-white/10 text-xs theme-text-muted">
+        <span class="flex items-center gap-2 theme-primary-color font-bold">
+          <span class="w-2 h-2 rounded-full animate-ping" style="background-color: var(--c-primary)"></span>
+          SYS.NAV_DRAWER
+        </span>
+        <span class="text-[10px] uppercase tracking-widest">AUTH: GUEST</span>
+      </div>
+      <a href="#hero" class="mobile-nav-link py-2.5 px-3 rounded-lg hover:bg-white/5 border-b border-white/5 flex items-center justify-between">
+        <span>01 // NEXUS</span>
+        <i class="fa-solid fa-chevron-right text-[10px] theme-primary-color"></i>
+      </a>
+      <a href="#gallery" class="mobile-nav-link py-2.5 px-3 rounded-lg hover:bg-white/5 border-b border-white/5 flex items-center justify-between">
+        <span>02 // PROJECTS</span>
+        <i class="fa-solid fa-chevron-right text-[10px] theme-primary-color"></i>
+      </a>
+      <a href="#arsenal" class="mobile-nav-link py-2.5 px-3 rounded-lg hover:bg-white/5 border-b border-white/5 flex items-center justify-between">
+        <span>03 // ARSENAL</span>
+        <i class="fa-solid fa-chevron-right text-[10px] theme-primary-color"></i>
+      </a>
+      <a href="#tutorial" class="mobile-nav-link py-2.5 px-3 rounded-lg hover:bg-white/5 border-b border-white/5 flex items-center justify-between">
+        <span>04 // TUTORIAL ARCHIVE</span>
+        <i class="fa-solid fa-chevron-right text-[10px] theme-primary-color"></i>
+      </a>
+      <a href="#stats" class="mobile-nav-link py-2.5 px-3 rounded-lg hover:bg-white/5 border-b border-white/5 flex items-center justify-between">
+        <span>05 // METRICS</span>
+        <i class="fa-solid fa-chevron-right text-[10px] theme-primary-color"></i>
+      </a>
+      <a href="#terminal" class="mobile-nav-link py-2.5 px-3 rounded-lg border border-white/10 flex items-center justify-between font-bold" style="background-color: rgba(255,255,255,0.06); color: var(--c-primary);">
+        <span>06 // COMMS TERMINAL</span>
+        <i class="fa-solid fa-bolt text-xs"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN SCROLL CONTAINER -->
+  <main class="relative z-10 w-full overflow-hidden">
+
+    <!-- 01 HERO SECTION -->
+    <section id="hero" class="min-h-screen relative flex items-center justify-center px-4 sm:px-8 pt-28 pb-16">
+      <div class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+        
+        <div class="lg:col-span-8 flex flex-col gap-6 text-left">
+          
+          <!-- HUD Protocol Badge -->
+          <div class="hero-anim-elem inline-flex flex-wrap items-center gap-2 sm:gap-3 px-3 py-1.5 rounded-full border border-white/10 glass-panel w-fit shadow-sm">
+            <span class="w-2 h-2 rounded-full animate-pulse" style="background-color: var(--c-primary)"></span>
+            <span class="font-mono text-[10px] sm:text-xs tracking-widest uppercase font-semibold" style="color: var(--c-primary)">PROTOCOL: CIT CERTIFIED // GAMEDEV &amp; UI</span>
+            <span class="font-mono text-[9px] sm:text-[10px] theme-text-muted border-l border-white/10 pl-2">PING 14MS</span>
+          </div>
+
+          <!-- Staggered Main Headline -->
+          <div class="hero-title-wrap">
+            <h1 class="font-display font-black text-4xl sm:text-7xl lg:text-8xl tracking-tight leading-none uppercase theme-text-heading">
+              <span class="hero-split block">SHAPING</span>
+              <span class="hero-split block text-transparent bg-clip-text filter drop-shadow" style="background-image: linear-gradient(90deg, var(--c-primary), var(--text-heading), var(--c-secondary));">VIRTUAL</span>
+              <span class="hero-split block">REALMS.</span>
+            </h1>
+          </div>
+
+          <!-- Subtitle / Bio -->
+          <p class="hero-anim-elem font-body theme-text-muted text-sm sm:text-xl max-w-2xl leading-relaxed">
+            I engineer high-fidelity digital interfaces, game worlds, and luxury interactive platforms. Fusing technical systems design with cinematic aesthetics.
+          </p>
+
+          <!-- Interactive CTAs -->
+          <div class="hero-anim-elem flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2 sm:pt-4">
+            <a href="#gallery" class="interactive-elem px-8 py-4 text-black font-mono font-bold tracking-widest text-xs sm:text-sm rounded-xl hover:scale-105 active:scale-95 transition-all cyber-clip flex items-center justify-center gap-3 shadow-lg" style="background: linear-gradient(135deg, var(--c-primary), var(--c-secondary));">
+              <span>EXPLORE QUESTS</span>
+              <i class="fa-solid fa-arrow-right-long text-xs"></i>
+            </a>
+
+            <a href="#terminal" class="interactive-elem px-8 py-4 glass-panel border border-white/20 hover:border-white/40 theme-text-heading font-mono font-semibold tracking-wider text-xs sm:text-sm rounded-xl transition-all flex items-center justify-center gap-3 active:scale-95 shadow-sm">
+              <i class="fa-solid fa-terminal" style="color: var(--c-secondary)"></i>
+              <span>TRANSMIT SIGNAL</span>
+            </a>
+          </div>
+
+          <!-- Telemetry Badges -->
+          <div class="hero-anim-elem pt-6 flex flex-wrap items-center gap-4 sm:gap-6 border-t border-white/10 text-[11px] sm:text-xs font-mono theme-text-muted">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-microchip" style="color: var(--c-primary)"></i>
+              <span>ENGINE: THREE.JS / WEBGL</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-gamepad" style="color: var(--c-secondary)"></i>
+              <span>SPECIALTY: GAME DEV &amp; DESIGN</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-shield-halved" style="color: var(--c-accent)"></i>
+              <span>LOCATION: DAHARKI, PK</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Hero Glass Hologram Info Card -->
+        <div class="lg:col-span-4 block">
+          <div class="interactive-card glass-panel-neon p-5 sm:p-6 rounded-2xl border relative overflow-hidden preserve-3d shadow-xl">
+            <div class="absolute -right-10 -bottom-10 w-40 h-40 rounded-full blur-3xl pointer-events-none holo-glow opacity-30" style="background-color: var(--c-primary)"></div>
+            
+            <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-4 font-mono text-xs theme-text-muted">
+              <span class="flex items-center gap-2"><i class="fa-solid fa-dna" style="color: var(--c-primary)"></i> OPERATOR PROFILE</span>
+              <span class="flex items-center gap-1.5" style="color: var(--c-primary)">
+                <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background-color: var(--c-primary)"></span>
+                SYNCHRONIZED
+              </span>
+            </div>
+
+            <div class="space-y-4">
+              <div>
+                <span class="text-[10px] font-mono theme-text-muted uppercase tracking-wider block">Codename</span>
+                <p class="font-display font-bold text-lg sm:text-xl theme-text-heading">Abdul Wali Khan</p>
+                <span class="text-[10px] font-mono theme-text-muted">Father: Abdul Hakeem</span>
+              </div>
+
+              <div>
+                <span class="text-[10px] font-mono theme-text-muted uppercase tracking-wider block">Class Status</span>
+                <p class="font-mono text-xs sm:text-sm font-semibold" style="color: var(--c-accent)">8th Class • GSS High School Daharki</p>
+              </div>
+
+              <div>
+                <span class="text-[10px] font-mono theme-text-muted uppercase tracking-wider block">CIT Qualification</span>
+                <p class="font-mono text-xs sm:text-sm theme-text-main">Kinetax Institute of Tech (2024-2025)</p>
+              </div>
+
+              <div>
+                <span class="text-[10px] font-mono theme-text-muted uppercase tracking-wider block">Current Directives</span>
+                <div class="flex flex-wrap gap-2 mt-2">
+                  <span class="px-2 py-1 rounded bg-white/5 border border-white/10 text-[10px] font-mono theme-text-muted">Game Design</span>
+                  <span class="px-2 py-1 rounded bg-white/5 border border-white/10 text-[10px] font-mono theme-text-muted">Video Editing</span>
+                  <span class="px-2 py-1 rounded bg-white/5 border border-white/10 text-[10px] font-mono theme-text-muted">Web Architecture</span>
+                </div>
+              </div>
+
+              <!-- HUD Graphic Element -->
+              <div class="mt-4 pt-4 border-t border-white/10 flex items-center justify-between font-mono text-[10px] theme-text-muted">
+                <span>SYSTEM INTEGRITY</span>
+                <div class="flex gap-1">
+                  <div class="w-2 h-3 rounded-sm" style="background-color: var(--c-primary)"></div>
+                  <div class="w-2 h-3 rounded-sm" style="background-color: var(--c-primary)"></div>
+                  <div class="w-2 h-3 rounded-sm" style="background-color: var(--c-primary)"></div>
+                  <div class="w-2 h-3 rounded-sm" style="background-color: var(--c-primary)"></div>
+                  <div class="w-2 h-3 rounded-sm opacity-40" style="background-color: var(--c-primary)"></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 02 FEATURED QUESTS (PROJECT GALLERY) -->
+    <section id="gallery" class="py-24 px-4 sm:px-8 relative z-20">
+      <div class="max-w-7xl mx-auto">
+        
+        <!-- Section Header -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4 border-b border-white/10 pb-6">
+          <div>
+            <span class="font-mono text-xs uppercase tracking-widest block mb-2 font-bold" style="color: var(--c-primary)">// MISSION LOGS</span>
+            <h2 class="font-display font-black text-4xl sm:text-5xl uppercase tracking-tight theme-text-heading">
+              Featured <span class="text-transparent bg-clip-text" style="background-image: linear-gradient(90deg, var(--c-primary), var(--c-secondary));">Deployments</span>
+            </h2>
+          </div>
+          <p class="font-mono text-xs theme-text-muted max-w-sm">
+            Interactive prototypes, high-octane 3D scenes, and game-oriented digital applications.
+          </p>
+        </div>
+
+        <!-- 3D Perspective Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 perspective-1000">
+
+          <!-- Card 1: Personal Portfolio Websites -->
+          <div class="project-card interactive-card glass-panel rounded-2xl p-6 border transition-all duration-500 flex flex-col justify-between preserve-3d group shadow-lg opacity-100 visible">
+            <div class="flex-1 flex flex-col">
+              <div class="relative w-full h-56 rounded-xl overflow-hidden mb-6 bg-black/40 border border-white/10 flex items-center justify-center shrink-0">
+                <img 
+                  src="https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=900" 
+                  alt="Personal Portfolio Websites" 
+                  class="absolute inset-0 w-full h-full object-cover filter brightness-90 contrast-125 group-hover:scale-105 group-hover:brightness-100 transition-all duration-700"
+                  onerror="this.onerror=null; this.src='https://placehold.co/900x600/0a0d18/00f3ff?text=PERSONAL+PORTFOLIO+WEB';"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
+                <div class="absolute top-3 left-3 px-2 py-1 rounded bg-black/80 backdrop-blur-md border border-white/10 text-[10px] font-mono text-white z-10 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background-color: var(--c-primary)"></span>
+                  ⚡ MISSION #01
+                </div>
+                <div class="absolute top-3 right-3 px-2.5 py-1 rounded bg-black/80 backdrop-blur-md border text-[10px] font-mono z-10 font-bold" style="color: var(--c-primary); border-color: var(--c-primary);">
+                  👑 FRONT-END UX
+                </div>
+                <div class="absolute bottom-3 left-3 flex flex-wrap gap-1.5 z-10">
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono text-white border border-white/10">✨ HTML5/CSS3</span>
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono border text-white" style="border-color: var(--c-primary)">Tailwind</span>
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono text-white border border-white/10">JS ES6+</span>
+                </div>
+              </div>
+              <span class="font-mono text-[10px] uppercase tracking-widest flex items-center gap-2 font-semibold" style="color: var(--c-primary)">
+                <i class="fa-solid fa-code text-[9px]"></i> 🔮 CORE ARCHITECTURE
+              </span>
+              <h3 class="font-display font-bold text-2xl theme-text-heading mt-1 transition-colors">
+                Personal Portfolio Websites 💻
+              </h3>
+              <p class="font-body text-sm theme-text-muted mt-2 leading-relaxed flex-1">
+                Bespoke, high-fashion responsive digital portfolios featuring glassmorphism cards, interactive micro-animations, custom cursor physics, and seamless mobile responsiveness.
+              </p>
+            </div>
+            <div class="pt-6 mt-6 border-t border-white/10 flex items-center justify-between gap-2">
+              <span class="font-mono text-xs text-emerald-500 font-semibold flex items-center gap-1.5 shrink-0">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> 🟢 PRODUCTION
+              </span>
+              <button onclick="openProjectModal('Personal Portfolio Websites', 'Front-End Architecture', 'A series of ultra-responsive personal portfolios crafted to showcase individual developer skill sets, project vaults, and interactive dossiers. Engineered using semantic HTML5, modern CSS3, Tailwind CSS, and vanilla JavaScript.', ['Semantic HTML5', 'Tailwind CSS', 'Vanilla JavaScript', 'Dynamic Animations', 'Adaptive Layouts'], 'https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=900')" class="interactive-elem px-4 py-2 rounded-lg bg-white/5 hover:bg-white/15 theme-text-heading font-mono text-xs font-bold transition-all flex items-center gap-2 border border-white/10">
+                <span>INSPECT 🔍</span>
+                <i class="fa-solid fa-expand text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 2: E-Commerce Websites -->
+          <div class="project-card interactive-card glass-panel rounded-2xl p-6 border transition-all duration-500 flex flex-col justify-between preserve-3d group shadow-lg opacity-100 visible">
+            <div class="flex-1 flex flex-col">
+              <div class="relative w-full h-56 rounded-xl overflow-hidden mb-6 bg-black/40 border border-white/10 flex items-center justify-center shrink-0">
+                <img 
+                  src="https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg?auto=compress&cs=tinysrgb&w=900" 
+                  alt="E-Commerce Websites" 
+                  class="absolute inset-0 w-full h-full object-cover filter brightness-90 contrast-125 group-hover:scale-105 group-hover:brightness-100 transition-all duration-700"
+                  onerror="this.onerror=null; this.src='https://placehold.co/900x600/15081a/ff0055?text=ECOMMERCE+STOREFRONT';"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
+                <div class="absolute top-3 left-3 px-2 py-1 rounded bg-black/80 backdrop-blur-md border border-white/10 text-[10px] font-mono text-white z-10 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background-color: var(--c-secondary)"></span>
+                  🔥 MISSION #02
+                </div>
+                <div class="absolute top-3 right-3 px-2.5 py-1 rounded bg-black/80 backdrop-blur-md border text-[10px] font-mono z-10 font-bold" style="color: var(--c-secondary); border-color: var(--c-secondary);">
+                  🛍️ FRONT-END COMMERCE
+                </div>
+                <div class="absolute bottom-3 left-3 flex flex-wrap gap-1.5 z-10">
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono text-white border border-white/10">🛒 UI/UX</span>
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono border text-white" style="border-color: var(--c-secondary)">Catalog Grid</span>
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono text-white border border-white/10">Drawer</span>
+                </div>
+              </div>
+              <span class="font-mono text-[10px] uppercase tracking-widest flex items-center gap-2 font-semibold" style="color: var(--c-secondary)">
+                <i class="fa-solid fa-cart-shopping text-[9px]"></i> 💳 STOREFRONT SYSTEM
+              </span>
+              <h3 class="font-display font-bold text-2xl theme-text-heading mt-1 transition-colors">
+                E-Commerce Websites 🛍️
+              </h3>
+              <p class="font-body text-sm theme-text-muted mt-2 leading-relaxed flex-1">
+                Luxury storefront interfaces featuring reactive merchandise catalogs, category filtering, sliding cart sidebars, badge counters, and seamless checkout UI flows.
+              </p>
+            </div>
+            <div class="pt-6 mt-6 border-t border-white/10 flex items-center justify-between gap-2">
+              <span class="font-mono text-xs font-semibold flex items-center gap-1.5 shrink-0" style="color: var(--c-primary)">
+                <span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--c-primary)"></span> ⚡ PROTOTYPE
+              </span>
+              <button onclick="openProjectModal('E-Commerce Websites', 'Front-End Storefront', 'Modern e-commerce landing pages and product catalog systems with dynamic filtering, real-time shopping cart drawers, and frictionless mobile experiences.', ['Product Catalog', 'Interactive Cart', 'Filter Logic', 'Responsive Grid', 'Modern UI'], 'https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg?auto=compress&cs=tinysrgb&w=900')" class="interactive-elem px-4 py-2 rounded-lg bg-white/5 hover:bg-white/15 theme-text-heading font-mono text-xs font-bold transition-all flex items-center gap-2 border border-white/10">
+                <span>INSPECT 🔍</span>
+                <i class="fa-solid fa-expand text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 3: Resumes -->
+          <div class="project-card interactive-card glass-panel rounded-2xl p-6 border transition-all duration-500 flex flex-col justify-between preserve-3d group shadow-lg opacity-100 visible">
+            <div class="flex-1 flex flex-col">
+              <div class="relative w-full h-56 rounded-xl overflow-hidden mb-6 bg-black/40 border border-white/10 flex items-center justify-center shrink-0">
+                <img 
+                  src="https://images.pexels.com/photos/590016/pexels-photo-590016.jpeg?auto=compress&cs=tinysrgb&w=900" 
+                  alt="Professional Resumes & CVs" 
+                  class="absolute inset-0 w-full h-full object-cover filter brightness-90 contrast-125 group-hover:scale-105 group-hover:brightness-100 transition-all duration-700"
+                  onerror="this.onerror=null; this.src='https://placehold.co/900x600/181206/f59e0b?text=RESUME+DESIGN';"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
+                <div class="absolute top-3 left-3 px-2 py-1 rounded bg-black/80 backdrop-blur-md border border-white/10 text-[10px] font-mono text-white z-10 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background-color: var(--c-accent)"></span>
+                  📑 MISSION #03
+                </div>
+                <div class="absolute top-3 right-3 px-2.5 py-1 rounded bg-black/80 backdrop-blur-md border text-[10px] font-mono z-10 font-bold" style="color: var(--c-accent); border-color: var(--c-accent);">
+                  📄 EDITORIAL LAYOUT
+                </div>
+                <div class="absolute bottom-3 left-3 flex flex-wrap gap-1.5 z-10">
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono text-white border border-white/10">ATS Friendly</span>
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono border text-white" style="border-color: var(--c-accent)">Typography</span>
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono text-white border border-white/10">MS Word</span>
+                </div>
+              </div>
+              <span class="font-mono text-[10px] uppercase tracking-widest flex items-center gap-2 font-semibold" style="color: var(--c-accent)">
+                <i class="fa-solid fa-file-lines text-[9px]"></i> 📄 EXECUTIVE BRANDING
+              </span>
+              <h3 class="font-display font-bold text-2xl theme-text-heading mt-1 transition-colors">
+                Resumes &amp; CVs 📄
+              </h3>
+              <p class="font-body text-sm theme-text-muted mt-2 leading-relaxed flex-1">
+                Precision-engineered curriculum vitae and professional resumes with immaculate typographic hierarchy, ATS compatibility, and executive corporate aesthetics.
+              </p>
+            </div>
+            <div class="pt-6 mt-6 border-t border-white/10 flex items-center justify-between gap-2">
+              <span class="font-mono text-xs text-emerald-500 font-semibold flex items-center gap-1.5 shrink-0">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> 📜 FORMATTED
+              </span>
+              <button onclick="openProjectModal('Resumes & CVs', 'Professional Editorial Layout', 'High-impact executive resumes and tech CVs designed for corporate and creative roles with balanced spatial grids, scannable milestones, and high visual authority.', ['MS Word Pro', 'ATS Optimization', 'Typography Hierarchy', 'PDF Export', 'Graphic Layout'], 'https://images.pexels.com/photos/590016/pexels-photo-590016.jpeg?auto=compress&cs=tinysrgb&w=900')" class="interactive-elem px-4 py-2 rounded-lg bg-white/5 hover:bg-white/15 theme-text-heading font-mono text-xs font-bold transition-all flex items-center gap-2 border border-white/10">
+                <span>INSPECT 🔍</span>
+                <i class="fa-solid fa-expand text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 4: Invitation Cards -->
+          <div class="project-card interactive-card glass-panel rounded-2xl p-6 border transition-all duration-500 flex flex-col justify-between preserve-3d group shadow-lg opacity-100 visible">
+            <div class="flex-1 flex flex-col">
+              <div class="relative w-full h-56 rounded-xl overflow-hidden mb-6 bg-black/40 border border-white/10 flex items-center justify-center shrink-0">
+                <img 
+                  src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=900" 
+                  alt="Invitation Cards" 
+                  class="absolute inset-0 w-full h-full object-cover filter brightness-90 contrast-125 group-hover:scale-105 group-hover:brightness-100 transition-all duration-700"
+                  onerror="this.onerror=null; this.src='https://placehold.co/900x600/181408/d97706?text=INVITATION+CARDS';"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
+                <div class="absolute top-3 left-3 px-2 py-1 rounded bg-black/80 backdrop-blur-md border border-white/10 text-[10px] font-mono text-white z-10 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background-color: var(--c-primary)"></span>
+                  💌 MISSION #04
+                </div>
+                <div class="absolute top-3 right-3 px-2.5 py-1 rounded bg-black/80 backdrop-blur-md border text-[10px] font-mono z-10 font-bold" style="color: var(--c-primary); border-color: var(--c-primary);">
+                  ✨ LUXURY PRINT &amp; DIGITAL
+                </div>
+                <div class="absolute bottom-3 left-3 flex flex-wrap gap-1.5 z-10">
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono text-white border border-white/10">Gold Foil</span>
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono border text-white" style="border-color: var(--c-primary)">Ornamental</span>
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono text-white border border-white/10">Custom CMYK</span>
+                </div>
+              </div>
+              <span class="font-mono text-[10px] uppercase tracking-widest flex items-center gap-2 font-semibold" style="color: var(--c-primary)">
+                <i class="fa-solid fa-envelope-open-text text-[9px]"></i> 💌 BESPOKE STATIONERY
+              </span>
+              <h3 class="font-display font-bold text-2xl theme-text-heading mt-1 transition-colors">
+                Invitation Cards 💌
+              </h3>
+              <p class="font-body text-sm theme-text-muted mt-2 leading-relaxed flex-1">
+                Luxury wedding, ceremonial, and celebratory event invitations designed with intricate geometric borders, bespoke calligraphy, and elegant modern palettes.
+              </p>
+            </div>
+            <div class="pt-6 mt-6 border-t border-white/10 flex items-center justify-between gap-2">
+              <span class="font-mono text-xs font-semibold flex items-center gap-1.5 shrink-0" style="color: var(--c-accent)">
+                <span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--c-accent)"></span> 💍 ELEVATED
+              </span>
+              <button onclick="openProjectModal('Invitation Cards', 'Luxury Stationery & Card Design', 'Opulent wedding invitations, digital event passes, and celebration stationery featuring ornate flourishes, gold leaf effects, and print-ready vector typography.', ['Graphic Design', 'Vector Calligraphy', 'Print Ready CMYK', 'Bespoke Palette', 'Event Branding'], 'https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=900')" class="interactive-elem px-4 py-2 rounded-lg bg-white/5 hover:bg-white/15 theme-text-heading font-mono text-xs font-bold transition-all flex items-center gap-2 border border-white/10">
+                <span>INSPECT 🔍</span>
+                <i class="fa-solid fa-expand text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 5: Logos -->
+          <div class="project-card interactive-card glass-panel rounded-2xl p-6 border transition-all duration-500 flex flex-col justify-between preserve-3d group shadow-lg opacity-100 visible">
+            <div class="flex-1 flex flex-col">
+              <div class="relative w-full h-56 rounded-xl overflow-hidden mb-6 bg-black/40 border border-white/10 flex items-center justify-center shrink-0">
+                <img 
+                  src="https://images.pexels.com/photos/1762851/pexels-photo-1762851.jpeg?auto=compress&cs=tinysrgb&w=900" 
+                  alt="Logos & Brand Identity" 
+                  class="absolute inset-0 w-full h-full object-cover filter brightness-90 contrast-125 group-hover:scale-105 group-hover:brightness-100 transition-all duration-700"
+                  onerror="this.onerror=null; this.src='https://placehold.co/900x600/120a1f/9d00ff?text=LOGO+IDENTITY';"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
+                <div class="absolute top-3 left-3 px-2 py-1 rounded bg-black/80 backdrop-blur-md border border-white/10 text-[10px] font-mono text-white z-10 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background-color: var(--c-secondary)"></span>
+                  🎨 MISSION #05
+                </div>
+                <div class="absolute top-3 right-3 px-2.5 py-1 rounded bg-black/80 backdrop-blur-md border text-[10px] font-mono z-10 font-bold" style="color: var(--c-secondary); border-color: var(--c-secondary);">
+                  🛡️ BRAND IDENTITY
+                </div>
+                <div class="absolute bottom-3 left-3 flex flex-wrap gap-1.5 z-10">
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono text-white border border-white/10">Vector SVG</span>
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono border text-white" style="border-color: var(--c-secondary)">Minimalist</span>
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono text-white border border-white/10">Mascots</span>
+                </div>
+              </div>
+              <span class="font-mono text-[10px] uppercase tracking-widest flex items-center gap-2 font-semibold" style="color: var(--c-secondary)">
+                <i class="fa-solid fa-shapes text-[9px]"></i> 🛡️ EMBLEMS &amp; CRESTS
+              </span>
+              <h3 class="font-display font-bold text-2xl theme-text-heading mt-1 transition-colors">
+                Logos &amp; Brand Marks 🎨
+              </h3>
+              <p class="font-body text-sm theme-text-muted mt-2 leading-relaxed flex-1">
+                Memorable visual identities, cybernetic crests, gaming clan emblems, and corporate marks built on geometric precision and mathematical balance.
+              </p>
+            </div>
+            <div class="pt-6 mt-6 border-t border-white/10 flex items-center justify-between gap-2">
+              <span class="font-mono text-xs text-emerald-500 font-semibold flex items-center gap-1.5 shrink-0">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ⚡ VECTOR SCALABLE
+              </span>
+              <button onclick="openProjectModal('Logos & Brand Marks', 'Vector Identity & Emblem Architecture', 'Iconic logo design suites including cybernetic gaming insignias, corporate lettermarks, and minimalist geometric crests engineered in infinite-resolution vector formats.', ['Vector Math', 'Brand Guides', 'SVG Architecture', 'Color Systems', 'Iconography'], 'https://images.pexels.com/photos/1762851/pexels-photo-1762851.jpeg?auto=compress&cs=tinysrgb&w=900')" class="interactive-elem px-4 py-2 rounded-lg bg-white/5 hover:bg-white/15 theme-text-heading font-mono text-xs font-bold transition-all flex items-center gap-2 border border-white/10">
+                <span>INSPECT 🔍</span>
+                <i class="fa-solid fa-expand text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 6: Banners -->
+          <div class="project-card interactive-card glass-panel rounded-2xl p-6 border transition-all duration-500 flex flex-col justify-between preserve-3d group shadow-lg opacity-100 visible">
+            <div class="flex-1 flex flex-col">
+              <div class="relative w-full h-56 rounded-xl overflow-hidden mb-6 bg-black/40 border border-white/10 flex items-center justify-center shrink-0">
+                <img 
+                  src="https://images.pexels.com/photos/3165335/pexels-photo-3165335.jpeg?auto=compress&cs=tinysrgb&w=900" 
+                  alt="High-Impact Banners & Headers" 
+                  class="absolute inset-0 w-full h-full object-cover filter brightness-90 contrast-125 group-hover:scale-105 group-hover:brightness-100 transition-all duration-700"
+                  onerror="this.onerror=null; this.src='https://placehold.co/900x600/0a1322/00f0ff?text=DIGITAL+BANNERS';"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
+                <div class="absolute top-3 left-3 px-2 py-1 rounded bg-black/80 backdrop-blur-md border border-white/10 text-[10px] font-mono text-white z-10 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background-color: var(--c-primary)"></span>
+                  📢 MISSION #06
+                </div>
+                <div class="absolute top-3 right-3 px-2.5 py-1 rounded bg-black/80 backdrop-blur-md border text-[10px] font-mono z-10 font-bold" style="color: var(--c-primary); border-color: var(--c-primary);">
+                  🚀 SOCIAL MEDIA &amp; WEB
+                </div>
+                <div class="absolute bottom-3 left-3 flex flex-wrap gap-1.5 z-10">
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono text-white border border-white/10">YouTube 4K</span>
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono border text-white" style="border-color: var(--c-primary)">Billboards</span>
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono text-white border border-white/10">Twitch HUD</span>
+                </div>
+              </div>
+              <span class="font-mono text-[10px] uppercase tracking-widest flex items-center gap-2 font-semibold" style="color: var(--c-primary)">
+                <i class="fa-solid fa-image text-[9px]"></i> 📢 CAMPAIGN VISUALS
+              </span>
+              <h3 class="font-display font-bold text-2xl theme-text-heading mt-1 transition-colors">
+                Banners &amp; Headers 📢
+              </h3>
+              <p class="font-body text-sm theme-text-muted mt-2 leading-relaxed flex-1">
+                Cinematic YouTube banners, Twitch stream headers, ad roll displays, and outdoor commercial banners with bold neon callouts and immersive depth.
+              </p>
+            </div>
+            <div class="pt-6 mt-6 border-t border-white/10 flex items-center justify-between gap-2">
+              <span class="font-mono text-xs font-semibold flex items-center gap-1.5 shrink-0" style="color: var(--c-primary)">
+                <span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--c-primary)"></span> ⚡ 4K RENDERS
+              </span>
+              <button onclick="openProjectModal('Banners & Headers', 'High-Impact Promotional Banners', 'Ultra-wide digital banners for YouTube channels, gaming tournaments, e-commerce sale campaigns, and social media header dimensions.', ['Photoshop Compositing', '4K High Res', 'Stream Overlays', 'Typography Dynamics', 'Digital Marketing'], 'https://images.pexels.com/photos/3165335/pexels-photo-3165335.jpeg?auto=compress&cs=tinysrgb&w=900')" class="interactive-elem px-4 py-2 rounded-lg bg-white/5 hover:bg-white/15 theme-text-heading font-mono text-xs font-bold transition-all flex items-center gap-2 border border-white/10">
+                <span>INSPECT 🔍</span>
+                <i class="fa-solid fa-expand text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 7: Image Editings -->
+          <div class="project-card interactive-card glass-panel rounded-2xl p-6 border transition-all duration-500 flex flex-col justify-between preserve-3d group shadow-lg md:col-span-2 lg:col-span-1 opacity-100 visible">
+            <div class="flex-1 flex flex-col">
+              <div class="relative w-full h-56 rounded-xl overflow-hidden mb-6 bg-black/40 border border-white/10 flex items-center justify-center shrink-0">
+                <img 
+                  src="https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=900" 
+                  alt="High-End Image Editings & Retouching" 
+                  class="absolute inset-0 w-full h-full object-cover filter brightness-90 contrast-125 group-hover:scale-105 group-hover:brightness-100 transition-all duration-700"
+                  onerror="this.onerror=null; this.src='https://placehold.co/900x600/14081c/e11d48?text=IMAGE+EDITING';"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
+                <div class="absolute top-3 left-3 px-2 py-1 rounded bg-black/80 backdrop-blur-md border border-white/10 text-[10px] font-mono text-white z-10 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background-color: var(--c-secondary)"></span>
+                  🖼️ MISSION #07
+                </div>
+                <div class="absolute top-3 right-3 px-2.5 py-1 rounded bg-black/80 backdrop-blur-md border text-[10px] font-mono z-10 font-bold" style="color: var(--c-secondary); border-color: var(--c-secondary);">
+                  ✨ PHOTO RETOUCHING
+                </div>
+                <div class="absolute bottom-3 left-3 flex flex-wrap gap-1.5 z-10">
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono text-white border border-white/10">Color Grading</span>
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono border text-white" style="border-color: var(--c-secondary)">VFX Masks</span>
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] font-mono text-white border border-white/10">Lighting</span>
+                </div>
+              </div>
+              <span class="font-mono text-[10px] uppercase tracking-widest flex items-center gap-2 font-semibold" style="color: var(--c-secondary)">
+                <i class="fa-solid fa-wand-magic-sparkles text-[9px]"></i> 🔮 DIGITAL MANIPULATION
+              </span>
+              <h3 class="font-display font-bold text-2xl theme-text-heading mt-1 transition-colors">
+                Image Editings &amp; Retouching 🖼️
+              </h3>
+              <p class="font-body text-sm theme-text-muted mt-2 leading-relaxed flex-1">
+                Advanced photo manipulation, cybernetic neon grading, precision background extraction, frequency separation retouching, and cinematic compositing.
+              </p>
+            </div>
+            <div class="pt-6 mt-6 border-t border-white/10 flex items-center justify-between gap-2">
+              <span class="font-mono text-xs text-emerald-500 font-semibold flex items-center gap-1.5 shrink-0">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> 📸 HI-FIDELITY
+              </span>
+              <button onclick="openProjectModal('Image Editings & Retouching', 'Photo Manipulation & Color Grading', 'Commercial photo retouching workflows including skin tone correction, background replacement, cyberpunk atmosphere overlays, and color balance grading.', ['Color Grading', 'Retouching', 'VFX Compositing', 'Lighting Simulation', 'High Fidelity Export'], 'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=900')" class="interactive-elem px-4 py-2 rounded-lg bg-white/5 hover:bg-white/15 theme-text-heading font-mono text-xs font-bold transition-all flex items-center gap-2 border border-white/10">
+                <span>INSPECT 🔍</span>
+                <i class="fa-solid fa-expand text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECT INSPECT MODAL (HUD DIALOG) -->
+    <div id="projectModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-xl hidden items-center justify-center p-4">
+      <div class="glass-panel-neon border rounded-3xl max-w-2xl w-full p-6 sm:p-8 relative overflow-hidden shadow-2xl">
+        <!-- Close Button -->
+        <button onclick="closeProjectModal()" class="interactive-elem absolute top-4 right-4 w-9 h-9 rounded-xl glass-panel border border-white/20 theme-text-muted hover:text-white flex items-center justify-center transition-all">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+
+        <div class="flex items-center gap-2 text-xs font-mono mb-2" style="color: var(--c-primary)">
+          <span class="w-2 h-2 rounded-full animate-pulse" style="background-color: var(--c-primary)"></span>
+          <span id="modalCategory">DEPLOYMENT INTEL</span>
+        </div>
+
+        <h3 id="modalTitle" class="font-display font-black text-2xl sm:text-3xl theme-text-heading uppercase tracking-tight mb-4">Project Title</h3>
+
+        <div class="relative w-full h-52 sm:h-64 rounded-xl overflow-hidden mb-5 border border-white/10">
+          <img id="modalImage" src="" alt="Project Visual" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+        </div>
+
+        <p id="modalDescription" class="font-body theme-text-muted text-sm leading-relaxed mb-5">
+          Project details will load here.
+        </p>
+
+        <div class="mb-6">
+          <span class="text-[10px] font-mono theme-text-muted uppercase tracking-widest block mb-2">KEY CAPABILITIES &amp; STACK</span>
+          <div id="modalPills" class="flex flex-wrap gap-2">
+            <!-- Dynamic pills inserted here -->
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
+          <button onclick="closeProjectModal()" class="interactive-elem px-5 py-2.5 rounded-xl border border-white/20 text-xs font-mono theme-text-muted hover:bg-white/10 transition-all">
+            CLOSE INTEL
+          </button>
+          <a href="#terminal" onclick="closeProjectModal()" class="interactive-elem px-5 py-2.5 rounded-xl text-black text-xs font-mono font-bold tracking-wider hover:opacity-90 transition-all flex items-center gap-2 shadow-md" style="background-color: var(--c-primary)">
+            <span>REQUEST DEMO / CODE</span>
+            <i class="fa-solid fa-bolt text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 ARSENAL / SKILL TREE INVENTORY -->
+    <section id="arsenal" class="py-24 px-4 sm:px-8 relative z-20">
+      <div class="max-w-7xl mx-auto">
+        
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="font-mono text-xs uppercase tracking-widest block font-bold" style="color: var(--c-secondary)">// INVENTORY &amp; LOADOUT</span>
+          <h2 class="font-display font-black text-4xl sm:text-5xl uppercase tracking-tight mt-2 theme-text-heading">
+            Combat <span class="text-transparent bg-clip-text" style="background-image: linear-gradient(90deg, var(--c-secondary), var(--c-accent));">Arsenal</span>
+          </h2>
+          <p class="font-body text-sm theme-text-muted mt-3">
+            Core attributes, certifications, and operational software proficiencies acquired throughout training.
+          </p>
+        </div>
+
+        <!-- Asymmetric Loadout Layout: 3:4 Animated Visual Matrix Card on Left + Skills on Right -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+
+          <!-- 3:4 ANIMATED CYBER OPERATOR IMAGE CARD (LEFT) -->
+          <div class="lg:col-span-4 flex">
+            <div class="w-full interactive-card glass-panel-neon rounded-3xl p-5 sm:p-6 border relative overflow-hidden flex flex-col justify-between preserve-3d group shadow-2xl">
+              
+              <!-- Ambient Corner Light -->
+              <div class="absolute -top-12 -left-12 w-40 h-40 rounded-full blur-2xl pointer-events-none holo-glow opacity-25" style="background-color: var(--c-primary)"></div>
+              <div class="absolute -bottom-12 -right-12 w-40 h-40 rounded-full blur-2xl pointer-events-none holo-glow opacity-25" style="background-color: var(--c-secondary)"></div>
+
+              <!-- Top Telemetry Bar -->
+              <div class="flex items-center justify-between font-mono text-[10px] theme-text-muted pb-3 border-b border-white/10 relative z-10">
+                <span class="flex items-center gap-1.5 font-bold" style="color: var(--c-primary)">
+                  <span class="w-2 h-2 rounded-full animate-pulse" style="background-color: var(--c-primary)"></span>
+                  OPERATOR_HUD // 01
+                </span>
+                <span class="tracking-widest uppercase font-bold" style="color: var(--c-accent)">LEVEL: 89</span>
+              </div>
+
+              <!-- Animated 3:4 Aspect Container with wali.jpeg, Hologram Overlays & Scanline Laser -->
+              <div class="relative w-full aspect-[3/4] rounded-2xl overflow-hidden my-4 bg-black/50 border border-white/15 flex items-center justify-center transition-all duration-500 shadow-inner">
+                
+                <!-- Operator Image -->
+                <img 
+                  src="wali.jpeg" 
+                  alt="Abdul Wali Khan - Operator Portrait" 
+                  class="absolute inset-0 w-full h-full object-cover object-center filter contrast-110 brightness-95 group-hover:scale-105 group-hover:contrast-125 transition-all duration-700 pointer-events-none"
+                  onerror="this.onerror=null; this.src='https://placehold.co/600x800/080a14/00f3ff?text=WALI+KHAN';"
+                />
+
+                <!-- Cybernetic Tint & Gradient Vignette -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80 pointer-events-none"></div>
+
+                <!-- Rotating Radar Reticle Background -->
+                <div class="absolute inset-0 flex items-center justify-center opacity-30 pointer-events-none">
+                  <div class="w-64 h-64 border border-dashed rounded-full animate-[spin_20s_linear_infinite]" style="border-color: var(--c-primary)"></div>
+                  <div class="absolute w-44 h-44 border rounded-full animate-[spin_12s_linear_infinite_reverse]" style="border-color: var(--c-secondary)"></div>
+                </div>
+
+                <!-- Active Laser Scanning Beam (Animated) -->
+                <div class="absolute inset-x-0 h-16 bg-gradient-to-b from-transparent to-transparent scan-beam pointer-events-none z-20" style="background-image: linear-gradient(to bottom, transparent, var(--c-primary), transparent); opacity: 0.35;"></div>
+
+                <!-- Hologram HUD Overlay Tags inside 3:4 frame -->
+                <div class="absolute bottom-3 left-3 px-2.5 py-1 rounded-md bg-black/80 backdrop-blur-md border text-[9px] font-mono flex items-center gap-1.5 z-20" style="color: var(--c-primary); border-color: var(--c-primary);">
+                  <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background-color: var(--c-primary)"></span>
+                  OPERATOR: ABDUL WALI KHAN
+                </div>
+
+                <div class="absolute top-3 right-3 px-2 py-1 rounded-md bg-black/80 backdrop-blur-md border text-[9px] font-mono z-20 font-bold" style="color: var(--c-secondary); border-color: var(--c-secondary);">
+                  SYS: SYNCED
+                </div>
+
+                <!-- HUD Corner Framing Markers -->
+                <div class="absolute top-2 left-2 w-3 h-3 border-t-2 border-l-2 pointer-events-none z-20" style="border-color: var(--c-primary)"></div>
+                <div class="absolute top-2 right-2 w-3 h-3 border-t-2 border-r-2 pointer-events-none z-20" style="border-color: var(--c-secondary)"></div>
+                <div class="absolute bottom-2 left-2 w-3 h-3 border-b-2 border-l-2 pointer-events-none z-20" style="border-color: var(--c-primary)"></div>
+                <div class="absolute bottom-2 right-2 w-3 h-3 border-b-2 border-r-2 pointer-events-none z-20" style="border-color: var(--c-accent)"></div>
+
+              </div>
+
+              <!-- Pilot Bio Sub-block -->
+              <div class="pt-2 relative z-10 border-t border-white/10 mt-1">
+                <div class="flex items-center justify-between text-xs font-mono pt-2">
+                  <span class="theme-text-heading font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-gamepad" style="color: var(--c-primary)"></i>
+                    ABDUL WALI KHAN
+                  </span>
+                  <span class="text-emerald-500 font-bold text-[10px]">COMBAT READY</span>
+                </div>
+                <p class="font-body text-xs theme-text-muted mt-1">
+                  Gaming enthusiast, story reader &amp; interactive game architect from Daharki.
+                </p>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- SKILLS & LOADOUT GRID (RIGHT 8 COLS) -->
+          <div class="lg:col-span-8 flex flex-col justify-between gap-6">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+              <!-- Slot 1 -->
+              <div class="interactive-elem glass-panel p-6 rounded-2xl border hover:border-white/40 transition-all duration-300 relative group overflow-hidden cursor-pointer" onclick="sound.playBlip(580, 0.08, 'triangle')">
+                <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="color: var(--c-primary)">
+                  <i class="fa-solid fa-code text-xl"></i>
+                </div>
+                <div class="font-mono text-[10px] theme-text-muted uppercase flex items-center justify-between">
+                  <span>LOADOUT ITEM 01</span>
+                  <span>💻 ARCHITECTURE</span>
+                </div>
+                <h4 class="font-display font-bold text-lg theme-text-heading mt-1">Web Architecture &amp; UI 🌐</h4>
+                <p class="font-body text-xs theme-text-muted mt-2 mb-4">Semantic HTML5, CSS3, Tailwind, JS, responsive spatial UX.</p>
+                <div class="w-full bg-black/20 h-1.5 rounded-full overflow-hidden border border-white/10">
+                  <div class="h-full rounded-full transition-all duration-1000" style="width: 88%; background-color: var(--c-primary)"></div>
+                </div>
+                <div class="flex justify-between font-mono text-[10px] theme-text-muted mt-2">
+                  <span>MASTERY LEVEL</span>
+                  <span style="color: var(--c-primary)">88% ⚡</span>
+                </div>
+              </div>
+
+              <!-- Slot 2 -->
+              <div class="interactive-elem glass-panel p-6 rounded-2xl border hover:border-white/40 transition-all duration-300 relative group overflow-hidden cursor-pointer" onclick="sound.playBlip(640, 0.08, 'triangle')">
+                <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="color: var(--c-secondary)">
+                  <i class="fa-solid fa-dice-d20 text-xl"></i>
+                </div>
+                <div class="font-mono text-[10px] theme-text-muted uppercase flex items-center justify-between">
+                  <span>LOADOUT ITEM 02</span>
+                  <span>🎮 SIMULATION</span>
+                </div>
+                <h4 class="font-display font-bold text-lg theme-text-heading mt-1">Game Development 🕹️</h4>
+                <p class="font-body text-xs theme-text-muted mt-2 mb-4">Mechanics design, game loop architecture, logic scripting &amp; levels.</p>
+                <div class="w-full bg-black/20 h-1.5 rounded-full overflow-hidden border border-white/10">
+                  <div class="h-full rounded-full transition-all duration-1000" style="width: 82%; background-color: var(--c-secondary)"></div>
+                </div>
+                <div class="flex justify-between font-mono text-[10px] theme-text-muted mt-2">
+                  <span>MASTERY LEVEL</span>
+                  <span style="color: var(--c-secondary)">82% 🔥</span>
+                </div>
+              </div>
+
+              <!-- Slot 3 -->
+              <div class="interactive-elem glass-panel p-6 rounded-2xl border hover:border-white/40 transition-all duration-300 relative group overflow-hidden cursor-pointer" onclick="sound.playBlip(720, 0.08, 'triangle')">
+                <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="color: var(--c-accent)">
+                  <i class="fa-solid fa-pen-nib text-xl"></i>
+                </div>
+                <div class="font-mono text-[10px] theme-text-muted uppercase flex items-center justify-between">
+                  <span>LOADOUT ITEM 03</span>
+                  <span>🎨 VISUALS</span>
+                </div>
+                <h4 class="font-display font-bold text-lg theme-text-heading mt-1">Graphic &amp; UI Design 📐</h4>
+                <p class="font-body text-xs theme-text-muted mt-2 mb-4">Vector branding, typography hierarchy, thumbnails &amp; banners.</p>
+                <div class="w-full bg-black/20 h-1.5 rounded-full overflow-hidden border border-white/10">
+                  <div class="h-full rounded-full transition-all duration-1000" style="width: 90%; background-color: var(--c-accent)"></div>
+                </div>
+                <div class="flex justify-between font-mono text-[10px] theme-text-muted mt-2">
+                  <span>MASTERY LEVEL</span>
+                  <span style="color: var(--c-accent)">90% 👑</span>
+                </div>
+              </div>
+
+              <!-- Slot 4 -->
+              <div class="interactive-elem glass-panel p-6 rounded-2xl border hover:border-white/40 transition-all duration-300 relative group overflow-hidden cursor-pointer" onclick="sound.playBlip(800, 0.08, 'triangle')">
+                <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="color: var(--c-primary)">
+                  <i class="fa-solid fa-film text-xl"></i>
+                </div>
+                <div class="font-mono text-[10px] theme-text-muted uppercase flex items-center justify-between">
+                  <span>LOADOUT ITEM 04</span>
+                  <span>🎬 CINEMATICS</span>
+                </div>
+                <h4 class="font-display font-bold text-lg theme-text-heading mt-1">Video &amp; Motion Editing 🎞️</h4>
+                <p class="font-body text-xs theme-text-muted mt-2 mb-4">Cuts, pacing, sound effects mix, color grading &amp; visual effects.</p>
+                <div class="w-full bg-black/20 h-1.5 rounded-full overflow-hidden border border-white/10">
+                  <div class="h-full rounded-full transition-all duration-1000" style="width: 85%; background-color: var(--c-primary)"></div>
+                </div>
+                <div class="flex justify-between font-mono text-[10px] theme-text-muted mt-2">
+                  <span>MASTERY LEVEL</span>
+                  <span style="color: var(--c-primary)">85% ⚡</span>
+                </div>
+              </div>
+
+              <!-- Slot 5: MS Office Productivity Matrix -->
+              <div class="interactive-elem glass-panel p-6 rounded-2xl border hover:border-white/40 transition-all duration-300 relative group overflow-hidden cursor-pointer" onclick="sound.playBlip(880, 0.08, 'triangle')">
+                <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="color: var(--c-accent)">
+                  <i class="fa-solid fa-file-invoice text-xl"></i>
+                </div>
+                <div class="font-mono text-[10px] theme-text-muted uppercase flex items-center justify-between">
+                  <span>LOADOUT ITEM 05</span>
+                  <span>📊 PRODUCTIVITY</span>
+                </div>
+                <h4 class="font-display font-bold text-lg theme-text-heading mt-1">MS Office Suite Pro 📑</h4>
+                <p class="font-body text-xs theme-text-muted mt-2 mb-4">Word formatting, advanced Excel calculation sheets &amp; dynamic presentations.</p>
+                <div class="w-full bg-black/20 h-1.5 rounded-full overflow-hidden border border-white/10">
+                  <div class="h-full rounded-full transition-all duration-1000" style="width: 92%; background-color: var(--c-accent)"></div>
+                </div>
+                <div class="flex justify-between font-mono text-[10px] theme-text-muted mt-2">
+                  <span>MASTERY LEVEL</span>
+                  <span style="color: var(--c-accent)">92% 🏆</span>
+                </div>
+              </div>
+
+              <!-- Slot 6: Creative Thinking & Narrative Design -->
+              <div class="interactive-elem glass-panel p-6 rounded-2xl border hover:border-white/40 transition-all duration-300 relative group overflow-hidden cursor-pointer" onclick="sound.playBlip(960, 0.08, 'triangle')">
+                <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="color: var(--c-secondary)">
+                  <i class="fa-solid fa-lightbulb text-xl"></i>
+                </div>
+                <div class="font-mono text-[10px] theme-text-muted uppercase flex items-center justify-between">
+                  <span>LOADOUT ITEM 06</span>
+                  <span>🧠 COGNITION</span>
+                </div>
+                <h4 class="font-display font-bold text-lg theme-text-heading mt-1">Creative Thinking 💡</h4>
+                <p class="font-body text-xs theme-text-muted mt-2 mb-4">Worldbuilding lore, tactical gameplay loops, puzzle solving &amp; ideation.</p>
+                <div class="w-full bg-black/20 h-1.5 rounded-full overflow-hidden border border-white/10">
+                  <div class="h-full rounded-full transition-all duration-1000" style="width: 95%; background-color: var(--c-secondary)"></div>
+                </div>
+                <div class="flex justify-between font-mono text-[10px] theme-text-muted mt-2">
+                  <span>MASTERY LEVEL</span>
+                  <span style="color: var(--c-secondary)">95% ⭐</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Languages & Special Attributes Banner -->
+            <div class="glass-panel p-5 sm:p-6 rounded-2xl border grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0" style="color: var(--c-primary)">
+                  <i class="fa-solid fa-language text-lg"></i>
+                </div>
+                <div>
+                  <span class="text-[10px] font-mono theme-text-muted uppercase flex items-center gap-1">🗣️ LINGUISTIC PROTOCOLS</span>
+                  <p class="font-display font-bold theme-text-heading text-xs sm:text-sm">Sindhi (Native) • Urdu • English</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0" style="color: var(--c-secondary)">
+                  <i class="fa-solid fa-certificate text-lg"></i>
+                </div>
+                <div>
+                  <span class="text-[10px] font-mono theme-text-muted uppercase flex items-center gap-1">📜 OFFICIAL CIT LICENSURE</span>
+                  <p class="font-display font-bold theme-text-heading text-xs sm:text-sm">Kinetax Institute (2024–2025)</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0" style="color: var(--c-accent)">
+                  <i class="fa-solid fa-brain text-lg"></i>
+                </div>
+                <div>
+                  <span class="text-[10px] font-mono theme-text-muted uppercase flex items-center gap-1">🎯 COGNITIVE SPECIALIZATION</span>
+                  <p class="font-display font-bold theme-text-heading text-xs sm:text-sm">Creative Logic &amp; MS Suite</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 03.5 TUTORIAL SECTION (SPLIT SCREEN: URDU POETRY & INTEL ON LEFT, COMPACT 16:9 VIDEO ON RIGHT) -->
+    <section id="tutorial" class="py-24 px-4 sm:px-8 relative z-20">
+      <div class="max-w-7xl mx-auto">
+        
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <span class="font-mono text-xs uppercase tracking-widest block font-bold" style="color: var(--c-primary)">// ARCHIVAL BROADCAST &amp; LORE</span>
+          <h2 class="font-display font-black text-4xl sm:text-5xl uppercase tracking-tight mt-2 theme-text-heading">
+            Tactical <span class="text-transparent bg-clip-text" style="background-image: linear-gradient(90deg, var(--c-primary), var(--c-secondary));">Tutorials</span>
+          </h2>
+          <p class="font-body text-sm theme-text-muted mt-3">
+            In-depth walkthrough showcasing development workflows, interface architecture, and creative gamedev execution.
+          </p>
+        </div>
+
+        <!-- Split Grid: Description & Urdu Poetry on Left, Compact 16:9 Video Console on Right -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <!-- LEFT COLUMN: TITLES, URDU POETRY & INTEL BRIEFING -->
+          <div class="lg:col-span-6 flex flex-col justify-between space-y-6">
+            
+            <div class="interactive-card glass-panel-neon p-6 sm:p-8 rounded-3xl border relative overflow-hidden shadow-2xl">
+              <!-- Corner Glow Accent -->
+              <div class="absolute -top-10 -right-10 w-36 h-36 rounded-full blur-3xl pointer-events-none opacity-20" style="background-color: var(--c-primary)"></div>
+
+              <!-- Cyber Badge -->
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 glass-panel text-[10px] font-mono tracking-widest uppercase mb-4" style="color: var(--c-primary)">
+                <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background-color: var(--c-primary)"></span>
+                ✨ BROADCAST DIRECTIVE // LECTURE NODE
+              </div>
+
+              <!-- Main Title & Subtitle -->
+              <h3 class="font-display font-black text-2xl sm:text-3xl lg:text-4xl theme-text-heading uppercase tracking-tight leading-tight">
+                Forging <span class="text-transparent bg-clip-text" style="background-image: linear-gradient(90deg, var(--c-primary), var(--c-accent));">Virtual Horizons</span>
+              </h3>
+              <p class="font-mono text-xs uppercase tracking-wider mt-2 font-bold" style="color: var(--c-secondary)">
+                // Masterwork in Front-End Architecture, Visual Storytelling &amp; Game Mechanics
+              </p>
+
+              <!-- Detailed Description -->
+              <p class="font-body text-sm theme-text-muted mt-4 leading-relaxed">
+                Enter the creative workshop of Abdul Wali Khan. This master lecture unveils the architecture behind building responsive spatial layouts, cinematic video editing pacing, and gamified mechanics crafted with precision and passion.
+              </p>
+
+              <!-- URDU POETRY CARD (Inspirational Couplets) -->
+              <div class="mt-6 p-5 rounded-2xl bg-black/40 border border-white/10 relative overflow-hidden group">
+                <div class="absolute top-2 right-3 font-mono text-[9px] uppercase tracking-widest text-amber-400/80 flex items-center gap-1.5">
+                  <span>علامہ اقبال</span>
+                  <i class="fa-solid fa-feather-pointed"></i>
+                </div>
+
+                <div class="pt-3 text-right" dir="rtl">
+                  <p class="font-serif text-lg sm:text-xl font-bold tracking-wide leading-loose text-white drop-shadow">
+                    خودی کو کر بلند اتنا کہ ہر تقدیر سے پہلے<br>
+                    خدا بندے سے خود پوچھے بتا تیری رضا کیا ہے
+                  </p>
+                  <p class="font-serif text-sm sm:text-base text-amber-300/90 mt-2 font-medium">
+                    نہیں ہے ناامید اقبال اپنی کشتِ ویراں سے<br>
+                    ذرا نم ہو تو یہ مٹی بہت زرخیز ہے ساقی
+                  </p>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[10px] font-mono theme-text-muted">
+                  <span class="flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--c-accent)"></span>
+                    SPIRIT OF EXCELLENCE &amp; DETERMINATION
+                  </span>
+                  <span>DAHARKI // DAHARKI HIGH</span>
+                </div>
+              </div>
+
+              <!-- Quick Specs Pill Badges -->
+              <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-3 font-mono text-[11px]">
+                <div class="p-2.5 rounded-xl bg-white/5 border border-white/5 flex flex-col">
+                  <span class="text-[9px] theme-text-muted uppercase">Duration</span>
+                  <span class="font-bold theme-text-heading">16:9 Landscape</span>
+                </div>
+                <div class="p-2.5 rounded-xl bg-white/5 border border-white/5 flex flex-col">
+                  <span class="text-[9px] theme-text-muted uppercase">Focus</span>
+                  <span class="font-bold" style="color: var(--c-primary)">Web &amp; Game Dev</span>
+                </div>
+                <div class="p-2.5 rounded-xl bg-white/5 border border-white/5 flex flex-col col-span-2 sm:col-span-1">
+                  <span class="text-[9px] theme-text-muted uppercase">Resolution</span>
+                  <span class="font-bold text-emerald-400">1080P HD 60FPS</span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN: COMPACT 16:9 CINEMATIC VIDEO MODULE -->
+          <div class="lg:col-span-6">
+            <div class="interactive-card glass-panel-neon rounded-3xl p-4 sm:p-5 border relative overflow-hidden shadow-2xl preserve-3d">
+              
+              <!-- Video Title Header -->
+              <div class="flex items-center justify-between font-mono text-xs theme-text-muted pb-3 mb-3 border-b border-white/10">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full animate-ping" style="background-color: var(--c-primary)"></span>
+                  <span class="font-bold theme-text-heading text-[11px]">FEED: TUT.MP4 // THEATER</span>
+                </div>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold" style="background-color: rgba(255,255,255,0.06); color: var(--c-primary)">
+                  SECURE FEED
+                </span>
+              </div>
+
+              <!-- Responsive 16:9 Video Canvas Frame (Compact) -->
+              <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-black/90 border border-white/15 flex items-center justify-center group shadow-2xl">
+                
+                <!-- Local Video Element -->
+                <video 
+                  id="tutorialVideo" 
+                  class="w-full h-full object-cover filter contrast-105" 
+                  playsinline 
+                  preload="metadata"
+                  poster="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80"
+                >
+                  <source src="tut.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+
+                <!-- Holographic Cyber Corner Framing -->
+                <div class="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2 pointer-events-none z-20" style="border-color: var(--c-primary)"></div>
+                <div class="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2 pointer-events-none z-20" style="border-color: var(--c-secondary)"></div>
+                <div class="absolute bottom-3 left-3 w-4 h-4 border-b-2 border-l-2 pointer-events-none z-20" style="border-color: var(--c-primary)"></div>
+                <div class="absolute bottom-3 right-3 w-4 h-4 border-b-2 border-r-2 pointer-events-none z-20" style="border-color: var(--c-accent)"></div>
+
+                <!-- Central Custom Play / Pause Overlay Trigger -->
+                <button 
+                  id="videoPlayBtn" 
+                  aria-label="Play Tutorial Video"
+                  class="interactive-elem absolute inset-0 m-auto w-16 h-16 sm:w-20 sm:h-20 rounded-full glass-panel border border-white/30 flex items-center justify-center text-white text-xl sm:text-2xl shadow-2xl transition-all duration-300 group-hover:scale-110 active:scale-95 z-30"
+                  style="box-shadow: 0 0 30px var(--glow-primary);"
+                >
+                  <i id="videoPlayIcon" class="fa-solid fa-play ml-1" style="color: var(--c-primary)"></i>
+                </button>
+
+                <!-- Bottom Custom Video Controls Bar -->
+                <div class="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/95 via-black/60 to-transparent flex items-center justify-between z-20 transition-opacity duration-300">
+                  <div class="flex items-center gap-2">
+                    <button id="videoMuteBtn" class="interactive-elem px-2.5 py-1 rounded-lg glass-panel border border-white/10 text-[11px] font-mono theme-text-heading flex items-center gap-1.5 hover:border-white/30 transition-all">
+                      <i id="videoMuteIcon" class="fa-solid fa-volume-high theme-primary-color"></i>
+                      <span id="videoMuteLabel" class="hidden sm:inline">MUTE</span>
+                    </button>
+
+                    <button id="videoFullscreenBtn" class="interactive-elem px-2.5 py-1 rounded-lg glass-panel border border-white/10 text-[11px] font-mono theme-text-heading flex items-center gap-1.5 hover:border-white/30 transition-all">
+                      <i class="fa-solid fa-expand theme-accent-color"></i>
+                      <span class="hidden sm:inline">EXPAND</span>
+                    </button>
+                  </div>
+
+                  <!-- Time / Resolution Stamp -->
+                  <div class="font-mono text-[10px] theme-text-muted flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--c-primary)"></span>
+                    <span id="videoDurationLabel">READY // 1080P</span>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Stream Info Footer -->
+              <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between font-mono text-[10px] theme-text-muted">
+                <span class="flex items-center gap-1.5">
+                  <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                  ENCODED WITH H.264 MATRIX
+                </span>
+                <span style="color: var(--c-accent)">ABDUL WALI KHAN // CIT ARCHIVE</span>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 04 METRICS / STATS -->
+    <section id="stats" class="py-20 px-4 sm:px-8 relative z-20 border-y border-white/10">
+      <div class="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-8">
+        
+        <div class="text-center p-6 glass-panel rounded-2xl border">
+          <div class="font-display font-black text-4xl sm:text-6xl theme-text-heading stat-counter" data-target="24">0</div>
+          <div class="font-mono text-xs uppercase tracking-wider mt-2 font-semibold" style="color: var(--c-primary)">Projects Deployed</div>
+        </div>
+
+        <div class="text-center p-6 glass-panel rounded-2xl border">
+          <div class="font-display font-black text-4xl sm:text-6xl stat-counter" style="color: var(--c-secondary)" data-target="99">0</div>
+          <div class="font-mono text-xs theme-text-muted uppercase tracking-wider mt-2 font-semibold">System Efficiency %</div>
+        </div>
+
+        <div class="text-center p-6 glass-panel rounded-2xl border">
+          <div class="font-display font-black text-4xl sm:text-6xl stat-counter" style="color: var(--c-accent)" data-target="1500">0</div>
+          <div class="font-mono text-xs theme-text-muted uppercase tracking-wider mt-2 font-semibold">Hours in Engine</div>
+        </div>
+
+        <div class="text-center p-6 glass-panel rounded-2xl border">
+          <div class="font-display font-black text-4xl sm:text-6xl theme-text-heading stat-counter" data-target="100">0</div>
+          <div class="font-mono text-xs uppercase tracking-wider mt-2 font-semibold" style="color: var(--c-primary)">Commitment %</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 05 CYBER TERMINAL CONTACT (MAP ON LEFT, FORM ON RIGHT) -->
+    <section id="terminal" class="py-24 px-4 sm:px-8 relative z-20">
+      <div class="max-w-7xl mx-auto">
+        
+        <div class="text-center mb-16">
+          <span class="font-mono text-xs uppercase tracking-widest block font-bold" style="color: var(--c-primary)">// ENCRYPTED TRANSMISSION</span>
+          <h2 class="font-display font-black text-4xl sm:text-5xl uppercase tracking-tight mt-2 theme-text-heading">
+            Command <span class="text-transparent bg-clip-text" style="background-image: linear-gradient(90deg, var(--c-primary), var(--c-secondary));">Terminal &amp; HQ</span>
+          </h2>
+          <p class="font-mono text-xs theme-text-muted mt-2">Direct telemetry interface and satellite coordinates for Abdul Wali Khan.</p>
+        </div>
+
+        <!-- Split Grid: Luxury Map Frame on Left, Terminal Form on Right -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          
+          <!-- LEFT COLUMN: COMPACT LUXURIOUS CYBER MAP FRAME -->
+          <div class="lg:col-span-5 flex flex-col justify-between space-y-6">
+            <div class="interactive-card glass-panel-neon rounded-3xl p-5 sm:p-6 border relative overflow-hidden shadow-2xl h-full flex flex-col justify-between preserve-3d">
+              
+              <!-- Ambient Corner Light -->
+              <div class="absolute -top-12 -left-12 w-44 h-44 rounded-full blur-3xl pointer-events-none opacity-25" style="background-color: var(--c-primary)"></div>
+              <div class="absolute -bottom-12 -right-12 w-44 h-44 rounded-full blur-3xl pointer-events-none opacity-25" style="background-color: var(--c-secondary)"></div>
+
+              <div>
+                <!-- Top Map Header -->
+                <div class="flex items-center justify-between font-mono text-[10px] theme-text-muted pb-3 mb-4 border-b border-white/10 relative z-10">
+                  <span class="flex items-center gap-1.5 font-bold" style="color: var(--c-primary)">
+                    <span class="w-2 h-2 rounded-full animate-ping" style="background-color: var(--c-primary)"></span>
+                    GPS_TARGET // SAT_FEED
+                  </span>
+                  <span class="px-2 py-0.5 rounded text-[9px] font-bold" style="background-color: rgba(255,255,255,0.06); color: var(--c-accent)">
+                    LOCK: ABDUL RAZAK BHUTTO
+                  </span>
+                </div>
+
+                <!-- Interactive Map Frame with Cyber Scanlines & Vignette -->
+                <div class="relative w-full h-64 sm:h-72 rounded-2xl overflow-hidden border border-white/15 bg-black/80 shadow-inner group">
+                  <!-- Google Map Embed focused on Abdul Razak Bhutto, Daharki -->
+                  <iframe 
+                    title="Abdul Razak Bhutto Daharki Sindh Pakistan Geo Location"
+                    src="https://maps.google.com/maps?q=Abdul%20Razak%20Bhutto,%20Daharki,%20Sindh,%20Pakistan&t=k&z=15&ie=UTF8&iwloc=&output=embed" 
+                    class="w-full h-full filter invert-[0.92] hue-rotate-[180deg] contrast-[1.25] brightness-[0.85] opacity-80 group-hover:opacity-100 transition-opacity duration-500 pointer-events-auto"
+                    loading="lazy"
+                    style="border:0;"
+                  ></iframe>
+
+                  <!-- Corner Reticles -->
+                  <div class="absolute top-2 left-2 w-3.5 h-3.5 border-t-2 border-l-2 pointer-events-none z-20" style="border-color: var(--c-primary)"></div>
+                  <div class="absolute top-2 right-2 w-3.5 h-3.5 border-t-2 border-r-2 pointer-events-none z-20" style="border-color: var(--c-secondary)"></div>
+                  <div class="absolute bottom-2 left-2 w-3.5 h-3.5 border-b-2 border-l-2 pointer-events-none z-20" style="border-color: var(--c-primary)"></div>
+                  <div class="absolute bottom-2 right-2 w-3.5 h-3.5 border-b-2 border-r-2 pointer-events-none z-20" style="border-color: var(--c-accent)"></div>
+
+                  <!-- Radar Sweep Ring Overlay -->
+                  <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+                    <div class="w-36 h-36 rounded-full border border-dashed animate-[spin_10s_linear_infinite]" style="border-color: var(--c-primary)"></div>
+                  </div>
+
+                  <!-- Live Target Badge -->
+                  <div class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg bg-black/85 backdrop-blur-md border border-white/15 text-[10px] font-mono flex items-center gap-1.5 z-20">
+                    <i class="fa-solid fa-location-crosshairs animate-pulse" style="color: var(--c-primary)"></i>
+                    <span class="theme-text-heading font-semibold">Abdul Razak Bhutto, Daharki</span>
+                  </div>
+                </div>
+
+                <!-- Tactical Base Intel -->
+                <div class="mt-5 space-y-3 font-mono text-xs">
+                  <div class="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5">
+                    <span class="theme-text-muted flex items-center gap-2">
+                      <i class="fa-solid fa-building-shield" style="color: var(--c-primary)"></i>
+                      HOME BASE
+                    </span>
+                    <span class="theme-text-heading font-bold">Abdul Razak Bhutto, Daharki</span>
+                  </div>
+
+                  <div class="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5">
+                    <span class="theme-text-muted flex items-center gap-2">
+                      <i class="fa-solid fa-school" style="color: var(--c-secondary)"></i>
+                      EDUCATION
+                    </span>
+                    <span class="theme-text-heading font-semibold text-[11px]">GSS High School Daharki</span>
+                  </div>
+
+                  <div class="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5">
+                    <span class="theme-text-muted flex items-center gap-2">
+                      <i class="fa-solid fa-signal" style="color: var(--c-accent)"></i>
+                      LINK FREQUENCY
+                    </span>
+                    <span class="font-bold text-emerald-400">+92 331 1374294</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick WhatsApp Direct Dispatch Button -->
+              <div class="mt-5 pt-4 border-t border-white/10">
+                <a 
+                  href="https://wa.me/923311374294?text=Hello%20Abdul%20Wali%20Khan,%20I%20saw%20your%20luxury%20gaming%20portfolio%20and%20would%20like%20to%20connect!" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="interactive-elem w-full py-3 px-4 rounded-xl text-black font-mono font-bold text-xs tracking-wider flex items-center justify-center gap-2 shadow-lg transition-transform hover:scale-[1.02] active:scale-95"
+                  style="background: linear-gradient(135deg, #10b981, var(--c-primary));"
+                >
+                  <i class="fa-brands fa-whatsapp text-sm"></i>
+                  <span>TRANSMIT VIA WHATSAPP (+923311374294)</span>
+                </a>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN: COMMAND TERMINAL FORM -->
+          <div class="lg:col-span-7">
+            <!-- Terminal Chassis -->
+            <div class="glass-panel-neon rounded-3xl border overflow-hidden shadow-2xl h-full flex flex-col justify-between">
+              
+              <!-- Terminal Title Bar -->
+              <div class="bg-black/60 px-5 py-3.5 border-b border-white/10 flex items-center justify-between font-mono text-xs theme-text-muted">
+                <div class="flex items-center gap-2">
+                  <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
+                  <span class="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
+                  <span class="w-3 h-3 rounded-full bg-green-500/80 inline-block"></span>
+                  <span class="ml-2 theme-text-main font-semibold">bash — wali@nexus-terminal:~#</span>
+                </div>
+                <span class="text-[10px] font-bold tracking-widest" style="color: var(--c-primary)">SECURE TLS-256</span>
+              </div>
+
+              <!-- Terminal Content & Interactive Form -->
+              <div class="p-6 sm:p-8 font-mono flex-1 flex flex-col justify-between">
+                
+                <div class="theme-text-muted text-xs mb-6 space-y-1">
+                  <p><span style="color: var(--c-primary)">nexus-os:</span> Initializing communication daemon on node [PK-DAHARKI-01]...</p>
+                  <p><span style="color: var(--c-secondary)">auth:</span> User handshake verified. Ready for transmission payload.</p>
+                </div>
+
+                <form id="terminalForm" class="space-y-5">
+                  
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <!-- Transmitter Name -->
+                    <div>
+                      <label class="block text-xs uppercase theme-text-muted mb-2 flex items-center gap-2">
+                        <span style="color: var(--c-primary)">&gt;</span> OPERATOR_NAME:
+                      </label>
+                      <input 
+                        type="text" 
+                        id="senderName" 
+                        required 
+                        placeholder="e.g. Alex Mercer"
+                        class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm theme-text-heading focus:outline-none transition-all"
+                      >
+                    </div>
+
+                    <!-- Transmitter Comm Channel -->
+                    <div>
+                      <label class="block text-xs uppercase theme-text-muted mb-2 flex items-center gap-2">
+                        <span style="color: var(--c-primary)">&gt;</span> COMM_FREQUENCY (EMAIL):
+                      </label>
+                      <input 
+                        type="email" 
+                        id="senderEmail" 
+                        required 
+                        placeholder="caller@domain.net"
+                        class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm theme-text-heading focus:outline-none transition-all"
+                      >
+                    </div>
+                  </div>
+
+                  <!-- Transmission Subject -->
+                  <div>
+                    <label class="block text-xs uppercase theme-text-muted mb-2 flex items-center gap-2">
+                      <span style="color: var(--c-secondary)">&gt;</span> MISSION_DIRECTIVE (SUBJECT):
+                    </label>
+                    <input 
+                      type="text" 
+                      id="senderSubject" 
+                      required 
+                      placeholder="Collaboration / Game Project / Inquiries"
+                      class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm theme-text-heading focus:outline-none transition-all"
+                    >
+                  </div>
+
+                  <!-- Transmission Message Body -->
+                  <div>
+                    <label class="block text-xs uppercase theme-text-muted mb-2 flex items-center gap-2">
+                      <span style="color: var(--c-accent)">&gt;</span> ENCRYPTED_PAYLOAD (MESSAGE):
+                    </label>
+                    <textarea 
+                      id="senderMessage" 
+                      rows="4" 
+                      required 
+                      placeholder="Detail your mission specifications or project brief..."
+                      class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm theme-text-heading focus:outline-none transition-all"
+                    ></textarea>
+                  </div>
+
+                  <!-- Terminal Submit -->
+                  <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-white/10">
+                    <span id="terminalStatus" class="text-xs theme-text-muted font-mono">
+                      [STATUS: STANDBY — AWAITING PACKET]
+                    </span>
+
+                    <button 
+                      type="submit" 
+                      class="interactive-elem w-full sm:w-auto px-8 py-3.5 text-black font-bold tracking-wider rounded-xl hover:scale-105 active:scale-95 transition-all cyber-clip flex items-center justify-center gap-3 text-xs shadow-md"
+                      style="background: linear-gradient(135deg, var(--c-primary), var(--c-secondary));"
+                    >
+                      <i class="fa-solid fa-satellite-dish"></i>
+                      <span>TRANSMIT PACKET</span>
+                    </button>
+                  </div>
+
+                </form>
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- HUGE, LUXURIOUS & ANIMATED FOOTER -->
+    <footer class="relative z-20 border-t border-white/10 glass-panel-neon overflow-hidden pt-16 pb-12 px-4 sm:px-8">
+      
+      <!-- Top Decorative Neon Ticker Marquee -->
+      <div class="max-w-7xl mx-auto mb-16 overflow-hidden border-y border-white/10 py-3 relative">
+        <div class="animate-marquee-scroll font-mono text-xs uppercase tracking-widest theme-text-muted flex items-center gap-8">
+          <span class="flex items-center gap-2 font-bold" style="color: var(--c-primary)">
+            <i class="fa-solid fa-microchip"></i> CIT CERTIFIED ARCHITECT
+          </span>
+          <span>•</span>
+          <span class="flex items-center gap-2 font-bold" style="color: var(--c-secondary)">
+            <i class="fa-solid fa-gamepad"></i> IMMERSIVE GAMEDEV
+          </span>
+          <span>•</span>
+          <span class="flex items-center gap-2 font-bold" style="color: var(--c-accent)">
+            <i class="fa-solid fa-layer-group"></i> 3D WEBGL INTERACTION
+          </span>
+          <span>•</span>
+          <span class="flex items-center gap-2 text-emerald-400 font-bold">
+            <i class="fa-solid fa-bolt"></i> HIGH SPEED FRONTEND
+          </span>
+          <span>•</span>
+          <span class="flex items-center gap-2 font-bold" style="color: var(--c-primary)">
+            <i class="fa-solid fa-code"></i> MS OFFICE &amp; DESIGN MATRIX
+          </span>
+          <span>•</span>
+          <span class="flex items-center gap-2 font-bold" style="color: var(--c-secondary)">
+            <i class="fa-solid fa-shield-halved"></i> DAHARKI, SINDH
+          </span>
+          <span>•</span>
+          <!-- Duplicate set for seamless continuous marquee loop -->
+          <span class="flex items-center gap-2 font-bold" style="color: var(--c-primary)">
+            <i class="fa-solid fa-microchip"></i> CIT CERTIFIED ARCHITECT
+          </span>
+          <span>•</span>
+          <span class="flex items-center gap-2 font-bold" style="color: var(--c-secondary)">
+            <i class="fa-solid fa-gamepad"></i> IMMERSIVE GAMEDEV
+          </span>
+          <span>•</span>
+          <span class="flex items-center gap-2 font-bold" style="color: var(--c-accent)">
+            <i class="fa-solid fa-layer-group"></i> 3D WEBGL INTERACTION
+          </span>
+          <span>•</span>
+          <span class="flex items-center gap-2 text-emerald-400 font-bold">
+            <i class="fa-solid fa-bolt"></i> HIGH SPEED FRONTEND
+          </span>
+          <span>•</span>
+          <span class="flex items-center gap-2 font-bold" style="color: var(--c-primary)">
+            <i class="fa-solid fa-code"></i> MS OFFICE &amp; DESIGN MATRIX
+          </span>
+          <span>•</span>
+          <span class="flex items-center gap-2 font-bold" style="color: var(--c-secondary)">
+            <i class="fa-solid fa-shield-halved"></i> DAHARKI, SINDH
+          </span>
+        </div>
+      </div>
+
+      <!-- Main Footer Grid (4 Grand Columns) -->
+      <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-12 border-b border-white/10">
+        
+        <!-- Column 1: Identity & Dossier Summary (4 cols) -->
+        <div class="lg:col-span-4 flex flex-col justify-between space-y-6">
+          <div>
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500/20 via-pink-500/20 to-yellow-500/20 border border-white/20 flex items-center justify-center font-display font-black text-2xl shadow-xl" style="color: var(--c-primary)">
+                W
+              </div>
+              <div>
+                <span class="font-display font-extrabold text-xl uppercase tracking-widest theme-text-heading block">
+                  Abdul Wali Khan
+                </span>
+                <span class="font-mono text-xs theme-text-muted">Son of Abdul Hakeem</span>
+              </div>
+            </div>
+
+            <p class="font-body text-xs sm:text-sm theme-text-muted leading-relaxed max-w-sm">
+              Creative game developer, video architect, and frontend designer currently in 8th Class at Government Single Section High School Daharki. Certified in Information Technology (CIT) at Kinetax Institute.
+            </p>
+          </div>
+
+          <!-- Live Status Ticker -->
+          <div class="p-4 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-between font-mono text-xs">
+            <div class="flex items-center gap-2.5">
+              <span class="w-2.5 h-2.5 rounded-full animate-ping bg-emerald-400"></span>
+              <span class="theme-text-heading font-semibold text-[11px]">NETWORK STATUS</span>
+            </div>
+            <span class="text-emerald-400 font-bold text-[10px]">ALL NODES ONLINE</span>
+          </div>
+        </div>
+
+        <!-- Column 2: Navigation Codex (2 cols) -->
+        <div class="lg:col-span-2 space-y-4 font-mono text-xs">
+          <span class="font-bold text-[11px] uppercase tracking-widest block border-b border-white/10 pb-2" style="color: var(--c-primary)">
+            // PROTOCOL LINKS
+          </span>
+          <ul class="space-y-2.5 theme-text-muted">
+            <li><a href="#hero" class="interactive-elem hover:text-white transition-colors flex items-center gap-1.5"><span>01.</span> Nexus Core</a></li>
+            <li><a href="#gallery" class="interactive-elem hover:text-white transition-colors flex items-center gap-1.5"><span>02.</span> Deployments</a></li>
+            <li><a href="#arsenal" class="interactive-elem hover:text-white transition-colors flex items-center gap-1.5"><span>03.</span> Weaponry / Arsenal</a></li>
+            <li><a href="#tutorial" class="interactive-elem hover:text-white transition-colors flex items-center gap-1.5"><span>04.</span> Video Archive</a></li>
+            <li><a href="#stats" class="interactive-elem hover:text-white transition-colors flex items-center gap-1.5"><span>05.</span> System Metrics</a></li>
+            <li><a href="#terminal" class="interactive-elem hover:text-white transition-colors flex items-center gap-1.5"><span>06.</span> Direct Comms</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Telemetry & System Specs (3 cols) -->
+        <div class="lg:col-span-3 space-y-4 font-mono text-xs">
+          <span class="font-bold text-[11px] uppercase tracking-widest block border-b border-white/10 pb-2" style="color: var(--c-secondary)">
+            // SYSTEM TELEMETRY
+          </span>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-black/30 border border-white/5">
+              <span class="theme-text-muted text-[10px]">TIME ZONE:</span>
+              <span class="theme-text-heading font-bold text-[11px]" id="livePktTime">PKT (UTC+5)</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-black/30 border border-white/5">
+              <span class="theme-text-muted text-[10px]">HOST REGION:</span>
+              <span class="font-bold text-[11px]" style="color: var(--c-accent)">DAHARKI, PK</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-black/30 border border-white/5">
+              <span class="theme-text-muted text-[10px]">WHATSAPP LINE:</span>
+              <a href="https://wa.me/923311374294" class="font-bold text-emerald-400 hover:underline text-[11px]">+92 331 1374294</a>
+            </div>
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-black/30 border border-white/5">
+              <span class="theme-text-muted text-[10px]">AUDIO SYNTH:</span>
+              <span class="theme-text-heading font-bold text-[11px]">WEB AUDIO API 64-BIT</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 4: Newsletter / Transmission Signal (3 cols) -->
+        <div class="lg:col-span-3 space-y-4 font-mono text-xs">
+          <span class="font-bold text-[11px] uppercase tracking-widest block border-b border-white/10 pb-2" style="color: var(--c-accent)">
+            // DISPATCH SUBSCRIBER
+          </span>
+          <p class="font-body text-xs theme-text-muted leading-relaxed">
+            Register your frequency to receive notifications on new gamedev prototypes and project releases.
+          </p>
+
+          <form id="footerSubscribeForm" class="space-y-2">
+            <div class="relative">
+              <input 
+                type="email" 
+                id="subscriberEmail"
+                required
+                placeholder="operator@nexus.net" 
+                class="w-full bg-black/50 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs theme-text-heading focus:outline-none transition-all placeholder:text-gray-500"
+              >
+              <button 
+                type="submit" 
+                class="interactive-elem absolute right-1.5 top-1.5 px-3 py-1.5 rounded-lg text-black font-bold text-[10px] hover:opacity-90 transition-opacity"
+                style="background-color: var(--c-primary);"
+              >
+                JOIN
+              </button>
+            </div>
+            <span id="subscribeStatus" class="text-[10px] theme-text-muted block"></span>
+          </form>
+
+          <!-- Social Channels -->
+          <div class="pt-2">
+            <span class="text-[9px] uppercase tracking-wider theme-text-muted block mb-2 font-bold">BROADCAST CHANNELS</span>
+            <div class="flex items-center gap-2">
+              <a href="https://wa.me/923311374294" target="_blank" rel="noopener noreferrer" title="WhatsApp" class="interactive-elem w-8 h-8 rounded-lg glass-panel border border-white/10 flex items-center justify-center text-emerald-400 hover:text-white hover:bg-emerald-500 transition-all text-xs">
+                <i class="fa-brands fa-whatsapp"></i>
+              </a>
+              <a href="#" title="GitHub" class="interactive-elem w-8 h-8 rounded-lg glass-panel border border-white/10 flex items-center justify-center theme-text-muted hover:text-white transition-all text-xs">
+                <i class="fa-brands fa-github"></i>
+              </a>
+              <a href="#" title="Discord" class="interactive-elem w-8 h-8 rounded-lg glass-panel border border-white/10 flex items-center justify-center theme-text-muted hover:text-white transition-all text-xs">
+                <i class="fa-brands fa-discord"></i>
+              </a>
+              <a href="#" title="YouTube" class="interactive-elem w-8 h-8 rounded-lg glass-panel border border-white/10 flex items-center justify-center theme-text-muted hover:text-white transition-all text-xs">
+                <i class="fa-brands fa-youtube"></i>
+              </a>
+              <a href="#" title="Steam" class="interactive-elem w-8 h-8 rounded-lg glass-panel border border-white/10 flex items-center justify-center theme-text-muted hover:text-white transition-all text-xs">
+                <i class="fa-brands fa-steam"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Trademark & Live Coordinates -->
+      <div class="max-w-7xl mx-auto pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs theme-text-muted">
+        <div class="flex items-center gap-3">
+          <span>&copy; 2026 ABDUL WALI KHAN // ALL RIGHTS RESERVED</span>
+          <span class="hidden md:inline">•</span>
+          <span class="hidden md:inline">GOVT SINGLE SECTION HIGH SCHOOL DAHARKI</span>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <span class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px]" style="color: var(--c-primary)">
+            ENGINE: THREE.JS + GSAP
+          </span>
+          <span class="text-[10px] text-emerald-400 font-bold flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            SYS: 100% SECURE
+          </span>
+        </div>
+      </div>
+
+    </footer>
+
+  </main>
+
+  <!-- LUXURY FLOATING ACTION COMMAND DOCK (BOTTOM RIGHT: WHATSAPP 923311374294 & BACK-TO-TOP) -->
+  <div class="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-3">
+    
+    <!-- WhatsApp Direct Link Button (Updated to 923311374294) -->
+    <a 
+      id="whatsappBtn" 
+      href="https://wa.me/923311374294?text=Hello%20Abdul%20Wali%20Khan,%20I%20reviewed%20your%20luxury%20gaming%20portfolio%20and%20would%20like%20to%20connect!" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      aria-label="Direct WhatsApp Transmission to 923311374294"
+      class="interactive-elem w-12 h-12 rounded-2xl glass-panel-neon border border-emerald-500/30 flex items-center justify-center text-emerald-400 hover:text-white hover:bg-emerald-500 transition-all duration-300 shadow-2xl group active:scale-90"
+      style="box-shadow: 0 0 20px rgba(16, 185, 129, 0.35);"
+    >
+      <i class="fa-brands fa-whatsapp text-xl group-hover:scale-110 transition-transform"></i>
+      <span class="absolute right-full mr-3 px-3 py-1 rounded-xl glass-panel border border-emerald-500/20 text-[11px] font-mono font-bold text-emerald-400 whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity shadow-lg">
+        DIRECT COMMS // +923311374294
+      </span>
+    </a>
+
+    <!-- Luxury Back-To-Top Button -->
+    <button 
+      id="backToTopBtn" 
+      aria-label="Back to Top of Page"
+      class="interactive-elem w-12 h-12 rounded-2xl glass-panel-neon border flex items-center justify-center transition-all duration-300 opacity-0 pointer-events-none hover:scale-105 active:scale-95 shadow-2xl group"
+      style="border-color: var(--c-primary); color: var(--c-primary);"
+    >
+      <i class="fa-solid fa-arrow-up text-base group-hover:-translate-y-1 transition-transform"></i>
+      <span class="absolute right-full mr-3 px-3 py-1 rounded-xl glass-panel border text-[11px] font-mono font-bold whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity shadow-lg" style="color: var(--c-primary); border-color: var(--c-primary);">
+        WARP // TOP
+      </span>
+    </button>
+
+  </div>
+
+  <!-- JAVASCRIPT LOGIC & LIBRARIES -->
+  <script>
+    /* ==========================================================================
+       00. ATMOSPHERIC REALM & THEME ENGINE (City, Gaming, Nature, Sky, Village, Desert)
+       ========================================================================== */
+    const ATMOSPHERIC_REALMS = {
+      city: {
+        name: 'City',
+        primary: '#00f0ff',
+        secondary: '#ff007f',
+        accent: '#f59e0b',
+        three1: 0x00f0ff,
+        three2: 0xff007f,
+        three3: 0xf59e0b
+      },
+      gaming: {
+        name: 'Gaming',
+        primary: '#a855f7',
+        secondary: '#06b6d4',
+        accent: '#ec4899',
+        three1: 0xa855f7,
+        three2: 0x06b6d4,
+        three3: 0xec4899
+      },
+      nature: {
+        name: 'Nature',
+        primary: '#10b981',
+        secondary: '#14b8a6',
+        accent: '#84cc16',
+        three1: 0x10b981,
+        three2: 0x14b8a6,
+        three3: 0x84cc16
+      },
+      sky: {
+        name: 'Sky',
+        primary: '#38bdf8',
+        secondary: '#6366f1',
+        accent: '#e0e7ff',
+        three1: 0x38bdf8,
+        three2: 0x6366f1,
+        three3: 0x0284c7
+      },
+      village: {
+        name: 'Village',
+        primary: '#84cc16',
+        secondary: '#eab308',
+        accent: '#f97316',
+        three1: 0x84cc16,
+        three2: 0xeab308,
+        three3: 0xf97316
+      },
+      desert: {
+        name: 'Desert',
+        primary: '#f97316',
+        secondary: '#d97706',
+        accent: '#fbbf24',
+        three1: 0xf97316,
+        three2: 0xd97706,
+        three3: 0xfbbf24
+      }
+    };
+
+    let currentAtmosphere = 'city';
+    let isLightMode = false;
+
+    // Switch color realm function
+    window.setAtmosphere = function(realmKey) {
+      const realm = ATMOSPHERIC_REALMS[realmKey];
+      if (!realm) return;
+      currentAtmosphere = realmKey;
+
+      const root = document.documentElement;
+      root.style.setProperty('--c-primary', realm.primary);
+      root.style.setProperty('--c-secondary', realm.secondary);
+      root.style.setProperty('--c-accent', realm.accent);
+
+      document.getElementById('activePaletteDot').style.backgroundColor = realm.primary;
+      document.getElementById('activePaletteLabel').textContent = realm.name;
+
+      // Update Three.js particles
+      recalculateThreeColors(realm.three1, realm.three2, realm.three3);
+
+      // Close dropdown
+      document.getElementById('paletteDropdown').classList.add('hidden');
+      document.getElementById('paletteDropdown').classList.remove('flex');
+
+      sound.playSuccess();
+    };
+
+    // Color Realm Dropdown Toggle
+    const colorPaletteBtn = document.getElementById('colorPaletteBtn');
+    const paletteDropdown = document.getElementById('paletteDropdown');
+    colorPaletteBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isHidden = paletteDropdown.classList.contains('hidden');
+      paletteDropdown.classList.toggle('hidden');
+      paletteDropdown.classList.toggle('flex');
+      sound.playHover();
+    });
+
+    document.addEventListener('click', () => {
+      if (!paletteDropdown.classList.contains('hidden')) {
+        paletteDropdown.classList.add('hidden');
+        paletteDropdown.classList.remove('flex');
+      }
+    });
+
+    // Light / Dark Mode Switcher
+    const themeModeBtn = document.getElementById('themeModeBtn');
+    const themeModeIcon = document.getElementById('themeModeIcon');
+    const themeModeLabel = document.getElementById('themeModeLabel');
+
+    themeModeBtn.addEventListener('click', () => {
+      isLightMode = !isLightMode;
+      document.documentElement.classList.toggle('light-theme', isLightMode);
+
+      if (isLightMode) {
+        themeModeIcon.className = 'fa-solid fa-sun text-amber-500';
+        themeModeLabel.textContent = 'LIGHT';
+        if (scene) scene.fog.color.setHex(0xf4f6fb);
+      } else {
+        themeModeIcon.className = 'fa-solid fa-moon theme-accent-color';
+        themeModeLabel.textContent = 'DARK';
+        if (scene) scene.fog.color.setHex(0x050608);
+      }
+      sound.playBlip(920, 0.08, 'triangle');
+    });
+
+    /* ==========================================================================
+       00. ANIMATED BROWSER TAB ICON (Dynamic HUD Canvas Favicon)
+       ========================================================================== */
+    (function initAnimatedFavicon() {
+      const favicon = document.getElementById('dynamicFavicon');
+      if (!favicon) return;
+      const favCanvas = document.createElement('canvas');
+      favCanvas.width = 32;
+      favCanvas.height = 32;
+      const ctx = favCanvas.getContext('2d');
+      let favAngle = 0;
+      let reqId = null;
+
+      function renderFavicon() {
+        if (document.hidden) {
+          reqId = requestAnimationFrame(renderFavicon);
+          return;
+        }
+
+        ctx.clearRect(0, 0, 32, 32);
+
+        // Dark background base circle
+        ctx.beginPath();
+        ctx.arc(16, 16, 15, 0, Math.PI * 2);
+        ctx.fillStyle = isLightMode ? '#ffffff' : '#050608';
+        ctx.fill();
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = isLightMode ? '#00000020' : '#ffffff18';
+        ctx.stroke();
+
+        const realm = ATMOSPHERIC_REALMS[currentAtmosphere] || ATMOSPHERIC_REALMS.city;
+
+        // Outer rotating radar arc
+        ctx.save();
+        ctx.translate(16, 16);
+        ctx.rotate(favAngle);
+
+        ctx.beginPath();
+        ctx.arc(0, 0, 11, 0, Math.PI * 1.2);
+        ctx.strokeStyle = realm.primary;
+        ctx.lineWidth = 2.5;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(0, 0, 11, Math.PI * 1.35, Math.PI * 1.85);
+        ctx.strokeStyle = realm.secondary;
+        ctx.lineWidth = 2.5;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+        ctx.restore();
+
+        // Pulsing glowing nucleus core
+        const pulse = Math.abs(Math.sin(favAngle * 2));
+        ctx.beginPath();
+        ctx.arc(16, 16, 3 + pulse * 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = realm.primary;
+        ctx.fill();
+
+        try {
+          favicon.href = favCanvas.toDataURL('image/png');
+        } catch(e) {}
+        
+        favAngle += 0.07;
+        reqId = requestAnimationFrame(renderFavicon);
+      }
+
+      renderFavicon();
+    })();
+
+    /* ==========================================================================
+       01. SYNTHESIZED WEB AUDIO ENGINE (Zero external sound assets)
+       ========================================================================== */
+    class SoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.enabled = false;
+      }
+
+      init() {
+        try {
+          if (!this.ctx) {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (AudioContextClass) {
+              this.ctx = new AudioContextClass();
+            }
+          }
+          if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume();
+          }
+          this.enabled = true;
+        } catch(e) {
+          this.enabled = false;
+        }
+      }
+
+      toggle() {
+        if (!this.enabled) {
+          this.init();
+          return this.enabled;
+        } else {
+          this.enabled = false;
+          return false;
+        }
+      }
+
+      playBlip(freq = 600, duration = 0.08, type = 'sine') {
+        if (!this.enabled || !this.ctx) return;
+        try {
+          if (this.ctx.state === 'suspended') {
+            this.ctx.resume();
+          }
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(freq * 1.8, this.ctx.currentTime + duration);
+
+          gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start();
+          osc.stop(this.ctx.currentTime + duration);
+        } catch(e) {}
+      }
+
+      playHover() {
+        this.playBlip(880, 0.04, 'triangle');
+      }
+
+      playSuccess() {
+        if (!this.enabled || !this.ctx) return;
+        const notes = [440, 554.37, 659.25, 880];
+        notes.forEach((freq, idx) => {
+          setTimeout(() => {
+            this.playBlip(freq, 0.15, 'sine');
+          }, idx * 75);
+        });
+      }
+    }
+
+    const sound = new SoundEngine();
+
+    // User interaction audio unlock listener for mobile & autoplay policies
+    const unlockAudio = () => {
+      if (sound.enabled && sound.ctx && sound.ctx.state === 'suspended') {
+        sound.ctx.resume();
+      }
+    };
+    window.addEventListener('pointerdown', unlockAudio, { once: true, passive: true });
+
+    // Sound Toggle Button Handler in Navigation
+    const soundToggleBtn = document.getElementById('soundToggle');
+    const soundIcon = document.getElementById('soundIcon');
+    const audioToast = document.getElementById('audioToast');
+
+    if (soundToggleBtn) {
+      soundToggleBtn.addEventListener('click', () => {
+        const isArmed = sound.toggle();
+        if (isArmed) {
+          soundIcon.className = 'fa-solid fa-volume-high theme-primary-color';
+          soundToggleBtn.classList.remove('theme-text-muted');
+          soundToggleBtn.classList.add('theme-primary-color');
+          soundToggleBtn.querySelector('span').textContent = 'SFX: ON';
+          sound.playSuccess();
+          
+          if (audioToast) {
+            audioToast.classList.remove('hidden');
+            audioToast.classList.add('flex');
+            setTimeout(() => {
+              audioToast.classList.add('hidden');
+              audioToast.classList.remove('flex');
+            }, 3000);
+          }
+        } else {
+          soundIcon.className = 'fa-solid fa-volume-xmark';
+          soundToggleBtn.classList.add('theme-text-muted');
+          soundToggleBtn.classList.remove('theme-primary-color');
+          soundToggleBtn.querySelector('span').textContent = 'SFX: OFF';
+        }
+      });
+    }
+
+    let scene, camera, renderer, particles, wireframeIco;
+    let particleGeometry;
+    let mouseX = 0, mouseY = 0;
+    let targetX = 0, targetY = 0;
+    const windowHalfX = window.innerWidth / 2;
+    const windowHalfY = window.innerHeight / 2;
+
+    function recalculateThreeColors(hex1, hex2, hex3) {
+      if (!particleGeometry) return;
+      const colors = particleGeometry.attributes.color.array;
+      const c1 = new THREE.Color(hex1);
+      const c2 = new THREE.Color(hex2);
+      const c3 = new THREE.Color(hex3);
+
+      for (let i = 0; i < colors.length / 3; i++) {
+        const ratio = Math.random();
+        const mixed = ratio < 0.5 ? c1.clone().lerp(c2, ratio * 2) : c2.clone().lerp(c3, (ratio - 0.5) * 2);
+        colors[i * 3] = mixed.r;
+        colors[i * 3 + 1] = mixed.g;
+        colors[i * 3 + 2] = mixed.b;
+      }
+      particleGeometry.attributes.color.needsUpdate = true;
+
+      if (wireframeIco) {
+        wireframeIco.material.color.setHex(hex1);
+      }
+    }
+
+    function initThree() {
+      const canvas = document.getElementById('hero-canvas');
+
+      // Scene
+      scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x050608, 0.0012);
+
+      // Camera
+      camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 1, 3000);
+      camera.position.z = 1000;
+
+      // Particle Vortex Buffer Geometry
+      const particleCount = window.innerWidth < 768 ? 1400 : 2400;
+      particleGeometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(particleCount * 3);
+      const colors = new Float32Array(particleCount * 3);
+
+      for (let i = 0; i < particleCount; i++) {
+        const radius = Math.random() * 1200 + 100;
+        const theta = THREE.MathUtils.randFloatSpread(360);
+        const phi = THREE.MathUtils.randFloatSpread(360);
+
+        positions[i * 3] = radius * Math.sin(theta) * Math.cos(phi);
+        positions[i * 3 + 1] = radius * Math.sin(theta) * Math.sin(phi);
+        positions[i * 3 + 2] = radius * Math.cos(theta);
+      }
+
+      particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      // Particle Material
+      const material = new THREE.PointsMaterial({
+        size: window.innerWidth < 768 ? 2.8 : 3.2,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.85,
+        blending: THREE.AdditiveBlending
+      });
+
+      particles = new THREE.Points(particleGeometry, material);
+      scene.add(particles);
+
+      // Initialize initial colors
+      const initialRealm = ATMOSPHERIC_REALMS[currentAtmosphere];
+      recalculateThreeColors(initialRealm.three1, initialRealm.three2, initialRealm.three3);
+
+      // Wireframe Geometric Core
+      const icoGeo = new THREE.IcosahedronGeometry(260, 2);
+      const wireMat = new THREE.MeshBasicMaterial({
+        color: initialRealm.three1,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.2
+      });
+      wireframeIco = new THREE.Mesh(icoGeo, wireMat);
+      scene.add(wireframeIco);
+
+      // Renderer
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      // Listeners
+      window.addEventListener('resize', onWindowResize);
+      document.addEventListener('mousemove', onDocumentMouseMove);
+      document.addEventListener('touchmove', onDocumentTouchMove, { passive: true });
+      window.addEventListener('scroll', onScrollMove, { passive: true });
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function onDocumentMouseMove(event) {
+      mouseX = (event.clientX - windowHalfX) * 0.45;
+      mouseY = (event.clientY - windowHalfY) * 0.45;
+    }
+
+    function onDocumentTouchMove(event) {
+      if (event.touches.length > 0) {
+        mouseX = (event.touches[0].clientX - windowHalfX) * 0.25;
+        mouseY = (event.touches[0].clientY - windowHalfY) * 0.25;
+      }
+    }
+
+    function onScrollMove() {
+      const scrollY = window.scrollY || window.pageYOffset;
+      if (wireframeIco) {
+        wireframeIco.position.y = -scrollY * 0.4;
+      }
+      if (particles) {
+        particles.rotation.z = scrollY * 0.0004;
+      }
+    }
+
+    function animateThree() {
+      requestAnimationFrame(animateThree);
+
+      targetX += (mouseX - targetX) * 0.05;
+      targetY += (mouseY - targetY) * 0.05;
+
+      if (particles) {
+        particles.rotation.x += 0.0008;
+        particles.rotation.y += 0.0012;
+      }
+
+      if (wireframeIco) {
+        wireframeIco.rotation.x -= 0.002;
+        wireframeIco.rotation.y -= 0.0025;
+        wireframeIco.position.x = targetX * 0.3;
+        wireframeIco.position.y = -targetY * 0.3 + (window.scrollY * -0.3);
+      }
+
+      camera.position.x += (targetX - camera.position.x) * 0.03;
+      camera.position.y += (-targetY - camera.position.y) * 0.03;
+      camera.lookAt(scene.position);
+
+      renderer.render(scene, camera);
+    }
+
+    /* ==========================================================================
+       03. CUSTOM DUAL-LAYER CURSOR
+       ========================================================================== */
+    const cursorRing = document.getElementById('cursorRing');
+    const cursorDot = document.getElementById('cursorDot');
+
+    window.addEventListener('mousemove', (e) => {
+      cursorDot.style.left = `${e.clientX}px`;
+      cursorDot.style.top = `${e.clientY}px`;
+
+      cursorRing.style.left = `${e.clientX}px`;
+      cursorRing.style.top = `${e.clientY}px`;
+    });
+
+    function bindInteractiveElements() {
+      const interactiveElements = document.querySelectorAll('.interactive-elem, a, button, input, textarea');
+      interactiveElements.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          cursorRing.classList.add('w-16', 'h-16');
+          cursorRing.classList.remove('w-10', 'h-10');
+          sound.playHover();
+        });
+        el.addEventListener('mouseleave', () => {
+          cursorRing.classList.remove('w-16', 'h-16');
+          cursorRing.classList.add('w-10', 'h-10');
+        });
+      });
+    }
+
+    /* ==========================================================================
+       04. 3D CARD PERSPECTIVE TILT
+       ========================================================================== */
+    const cards = document.querySelectorAll('.interactive-card');
+    cards.forEach(card => {
+      if (window.innerWidth < 1024) return;
+
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        const rotateX = -(y / rect.height) * 10;
+        const rotateY = (x / rect.width) * 10;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+      });
+    });
+
+    /* ==========================================================================
+       05. GSAP STAGGERED REVEALS & SCROLL TRIGGERS
+       ========================================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      initThree();
+      animateThree();
+      bindInteractiveElements();
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Kill any broken or stale ScrollTriggers
+      ScrollTrigger.getAll().forEach(t => t.kill());
+
+      const heroTl = gsap.timeline();
+
+      heroTl.from('.hero-split', {
+        y: 60,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.15,
+        ease: 'power4.out',
+      })
+      .from('.hero-anim-elem', {
+        y: 25,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.12,
+        ease: 'power3.out'
+      }, '-=0.5');
+
+      // Guarantee project cards are visible immediately, with subtle reveal
+      gsap.fromTo('.project-card', 
+        { y: 30, opacity: 0.8 },
+        {
+          scrollTrigger: {
+            trigger: '#gallery',
+            start: 'top 85%',
+          },
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power2.out',
+          overwrite: 'auto'
+        }
+      );
+
+      gsap.from('#arsenal .glass-panel, #arsenal .glass-panel-neon', {
+        scrollTrigger: {
+          trigger: '#arsenal',
+          start: 'top 80%',
+        },
+        scale: 0.98,
+        opacity: 0.2,
+        duration: 0.6,
+        stagger: 0.08,
+        ease: 'power2.out'
+      });
+
+      gsap.from('#tutorial .glass-panel-neon', {
+        scrollTrigger: {
+          trigger: '#tutorial',
+          start: 'top 80%',
+        },
+        y: 30,
+        opacity: 0.2,
+        duration: 0.7,
+        ease: 'power3.out'
+      });
+
+      const counters = document.querySelectorAll('.stat-counter');
+      counters.forEach(counter => {
+        const target = +counter.getAttribute('data-target');
+        
+        ScrollTrigger.create({
+          trigger: counter,
+          start: 'top 85%',
+          onEnter: () => {
+            gsap.to(counter, {
+              innerHTML: target,
+              duration: 1.8,
+              snap: { innerHTML: 1 },
+              ease: 'power2.out'
+            });
+          }
+        });
+      });
+
+      // Refresh ScrollTrigger calculations after everything renders
+      ScrollTrigger.refresh();
+    });
+
+    /* ==========================================================================
+       06. TUTORIAL VIDEO PLAYER LOGIC (tut.mp4)
+       ========================================================================== */
+    const tutorialVideo = document.getElementById('tutorialVideo');
+    const videoPlayBtn = document.getElementById('videoPlayBtn');
+    const videoPlayIcon = document.getElementById('videoPlayIcon');
+    const videoMuteBtn = document.getElementById('videoMuteBtn');
+    const videoMuteIcon = document.getElementById('videoMuteIcon');
+    const videoMuteLabel = document.getElementById('videoMuteLabel');
+    const videoFullscreenBtn = document.getElementById('videoFullscreenBtn');
+    const videoDurationLabel = document.getElementById('videoDurationLabel');
+
+    if (tutorialVideo && videoPlayBtn) {
+      let isPlayPending = false;
+
+      function toggleVideoPlayback() {
+        if (isPlayPending) return;
+
+        if (tutorialVideo.paused) {
+          isPlayPending = true;
+          const playPromise = tutorialVideo.play();
+          
+          if (playPromise !== undefined) {
+            playPromise
+              .then(() => {
+                isPlayPending = false;
+                videoPlayIcon.className = 'fa-solid fa-pause';
+                videoPlayBtn.classList.add('opacity-0', 'hover:opacity-100');
+                videoDurationLabel.textContent = 'PLAYBACK ACTIVE // 1080P';
+                sound.playBlip(780, 0.08, 'sine');
+              })
+              .catch((err) => {
+                isPlayPending = false;
+                // Gracefully suppress AbortError when play was interrupted or blocked
+                if (err.name !== 'AbortError') {
+                  console.warn('Video playback was prevented:', err);
+                }
+              });
+          } else {
+            isPlayPending = false;
+            videoPlayIcon.className = 'fa-solid fa-pause';
+            videoPlayBtn.classList.add('opacity-0', 'hover:opacity-100');
+            videoDurationLabel.textContent = 'PLAYBACK ACTIVE // 1080P';
+            sound.playBlip(780, 0.08, 'sine');
+          }
+        } else {
+          tutorialVideo.pause();
+          videoPlayIcon.className = 'fa-solid fa-play ml-1';
+          videoPlayBtn.classList.remove('opacity-0');
+          videoDurationLabel.textContent = 'PAUSED // STANDBY';
+          sound.playBlip(480, 0.08, 'sine');
+        }
+      }
+
+      videoPlayBtn.addEventListener('click', toggleVideoPlayback);
+      tutorialVideo.addEventListener('click', toggleVideoPlayback);
+
+      tutorialVideo.addEventListener('ended', () => {
+        isPlayPending = false;
+        videoPlayIcon.className = 'fa-solid fa-rotate-right';
+        videoPlayBtn.classList.remove('opacity-0');
+        videoDurationLabel.textContent = 'BROADCAST CONCLUDED';
+      });
+
+      videoMuteBtn.addEventListener('click', () => {
+        tutorialVideo.muted = !tutorialVideo.muted;
+        if (tutorialVideo.muted) {
+          videoMuteIcon.className = 'fa-solid fa-volume-xmark';
+          videoMuteLabel.textContent = 'AUDIO MUTED';
+        } else {
+          videoMuteIcon.className = 'fa-solid fa-volume-high theme-primary-color';
+          videoMuteLabel.textContent = 'AUDIO ON';
+        }
+        sound.playHover();
+      });
+
+      videoFullscreenBtn.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          if (tutorialVideo.requestFullscreen) {
+            tutorialVideo.requestFullscreen();
+          } else if (tutorialVideo.webkitRequestFullscreen) {
+            tutorialVideo.webkitRequestFullscreen();
+          }
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          }
+        }
+        sound.playHover();
+      });
+    }
+
+    /* ==========================================================================
+       07. BACK-TO-TOP & WHATSAPP BUTTON LOGIC
+       ========================================================================== */
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    const whatsappBtn = document.getElementById('whatsappBtn');
+
+    window.addEventListener('scroll', () => {
+      const scrollPos = window.scrollY || window.pageYOffset;
+      if (scrollPos > 400) {
+        backToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
+        backToTopBtn.classList.add('opacity-100', 'pointer-events-auto');
+      } else {
+        backToTopBtn.classList.add('opacity-0', 'pointer-events-none');
+        backToTopBtn.classList.remove('opacity-100', 'pointer-events-auto');
+      }
+    }, { passive: true });
+
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      sound.playSuccess();
+    });
+
+    whatsappBtn.addEventListener('click', () => {
+      sound.playBlip(820, 0.09, 'sine');
+    });
+
+    /* ==========================================================================
+       08. FUNCTIONAL CYBER TERMINAL FORM
+       ========================================================================== */
+    const terminalForm = document.getElementById('terminalForm');
+    const terminalStatus = document.getElementById('terminalStatus');
+
+    terminalForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      sound.playBlip(750, 0.1, 'sawtooth');
+
+      terminalStatus.innerHTML = `<span class="animate-pulse" style="color: var(--c-primary)">[UPLOADING PACKET TO HOST...]</span>`;
+
+      setTimeout(() => {
+        terminalStatus.innerHTML = `<span style="color: var(--c-secondary)">[PACKET ENCRYPTED &amp; TRANSMITTED TO WALI KHAN (+923311374294)]</span>`;
+        sound.playSuccess();
+        terminalForm.reset();
+
+        setTimeout(() => {
+          terminalStatus.innerHTML = `[STATUS: STANDBY — AWAITING PACKET]`;
+        }, 5000);
+      }, 1400);
+    });
+
+    /* ==========================================================================
+       08.5 FOOTER CLOCK & SUBSCRIPTION SYSTEM
+       ========================================================================== */
+    function updatePktClock() {
+      const clockEl = document.getElementById('livePktTime');
+      if (clockEl) {
+        const now = new Date();
+        const options = { timeZone: 'Asia/Karachi', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        clockEl.textContent = `${now.toLocaleTimeString('en-US', options)} PKT`;
+      }
+    }
+    setInterval(updatePktClock, 1000);
+    updatePktClock();
+
+    const footerSubscribeForm = document.getElementById('footerSubscribeForm');
+    const subscribeStatus = document.getElementById('subscribeStatus');
+    if (footerSubscribeForm) {
+      footerSubscribeForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        sound.playSuccess();
+        subscribeStatus.innerHTML = `<span class="text-emerald-400 font-bold">[NODE REGISTERED TO DISPATCH CHANNEL]</span>`;
+        footerSubscribeForm.reset();
+        setTimeout(() => {
+          subscribeStatus.innerHTML = '';
+        }, 4000);
+      });
+    }
+
+    /* ==========================================================================
+       09. MOBILE NAVIGATION TOGGLE & SOUND
+       ========================================================================== */
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+    const menuHamburgerIcon = document.getElementById('menuHamburgerIcon');
+
+    mobileMenuBtn.addEventListener('click', () => {
+      const isHidden = mobileMenu.classList.contains('hidden');
+      mobileMenu.classList.toggle('hidden');
+      mobileMenu.classList.toggle('flex');
+      
+      if (isHidden) {
+        menuHamburgerIcon.className = 'fa-solid fa-xmark text-lg';
+      } else {
+        menuHamburgerIcon.className = 'fa-solid fa-bars-staggered text-lg';
+      }
+      sound.playHover();
+    });
+
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        mobileMenu.classList.remove('flex');
+        menuHamburgerIcon.className = 'fa-solid fa-bars-staggered text-lg';
+      });
+    });
+
+    /* ==========================================================================
+       10. INTERACTIVE PROJECT INSPECTION MODAL LOGIC & KEYBOARD ESCAPE
+       ========================================================================== */
+    window.openProjectModal = function(title, category, description, pills, imageUrl) {
+      const modal = document.getElementById('projectModal');
+      if (!modal) return;
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalCategory').textContent = `DEPLOYMENT INTEL // ${category.toUpperCase()}`;
+      document.getElementById('modalDescription').textContent = description;
+      document.getElementById('modalImage').src = imageUrl;
+
+      const pillsContainer = document.getElementById('modalPills');
+      pillsContainer.innerHTML = '';
+      pills.forEach(pill => {
+        const badge = document.createElement('span');
+        badge.className = 'px-3 py-1 rounded-lg border text-[10px] font-mono uppercase';
+        badge.style.borderColor = 'var(--c-primary)';
+        badge.style.color = 'var(--c-primary)';
+        badge.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+        badge.textContent = pill;
+        pillsContainer.appendChild(badge);
+      });
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      sound.playSuccess();
+    };
+
+    window.closeProjectModal = function() {
+      const modal = document.getElementById('projectModal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      sound.playBlip(500, 0.05, 'sine');
+    };
+
+    // Close modal on click outside backdrop or on ESC key
+    const modalBackdrop = document.getElementById('projectModal');
+    if (modalBackdrop) {
+      modalBackdrop.addEventListener('click', (e) => {
+        if (e.target === modalBackdrop) {
+          window.closeProjectModal();
+        }
+      });
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('projectModal');
+        if (modal && !modal.classList.contains('hidden')) {
+          window.closeProjectModal();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
